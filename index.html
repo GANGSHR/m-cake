@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>苷舍 × 母親節蛋糕預購</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-<!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
@@ -100,14 +99,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     color: var(--brown-deep);
     letter-spacing: 0.1em;
     margin-bottom: 22px;
   }
   .section-label .dot {
-    width: 6px; height: 6px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--brown-light);
     flex-shrink: 0;
@@ -158,11 +157,88 @@
     flex-shrink: 0;
   }
   .step-text {
-    font-size: clamp(10px, 2.5vw, 12px);
+    font-size: clamp(11px, 2.5vw, 13px);
     color: var(--text-mid);
     letter-spacing: 0.02em;
     line-height: 1.5;
     word-break: keep-all;
+  }
+
+  /* ── DATE SELECTOR ── */
+  .date-section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--brown-deep);
+    letter-spacing: 0.12em;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .date-section-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--brown);
+    flex-shrink: 0;
+  }
+
+  .date-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  @media(max-width:500px){
+    .date-grid { grid-template-columns: 1fr; }
+  }
+
+  .date-btn {
+    border: 2px solid var(--pale-dogwood-deep);
+    border-radius: 14px;
+    padding: 18px 10px;
+    background: var(--white);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    color: var(--text-dark);
+    font-family: 'Noto Serif TC', serif;
+    line-height: 1.6;
+  }
+  .date-btn:hover:not(:disabled) {
+    border-color: var(--brown);
+    background: var(--pale-dogwood-light);
+    box-shadow: 0 2px 10px rgba(158,123,106,0.15);
+  }
+  .date-btn.selected {
+    border-color: var(--brown);
+    background: var(--pale-dogwood);
+    color: var(--brown-deep);
+    box-shadow: 0 3px 14px rgba(158,123,106,0.22);
+  }
+  .date-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #f5f5f5;
+  }
+  .date-btn .date-main {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .date-btn .date-time {
+    font-size: 13px;
+    color: var(--text-mid);
+    display: block;
+  }
+  .date-btn.selected .date-time { color: var(--brown); }
+  .date-btn .date-full {
+    font-size: 12px;
+    color: var(--warn);
+    font-weight: 600;
+    margin-top: 4px;
+    display: block;
   }
 
   /* ── PICKUP INFO ── */
@@ -170,58 +246,26 @@
     background: var(--pale-dogwood-light);
     border-radius: 14px;
     padding: 20px 24px;
-    margin-bottom: 22px;
+    margin-top: 18px;
     border-left: 3px solid var(--brown-light);
   }
   .pickup-info-row {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    margin-bottom: 8px;
-    font-size: 13.5px;
+    margin-bottom: 10px;
+    font-size: 14.5px;
     color: var(--text-mid);
-    line-height: 1.6;
+    line-height: 1.7;
   }
   .pickup-info-row:last-child { margin-bottom: 0; }
-  .pickup-icon { font-size: 15px; flex-shrink: 0; margin-top: 2px; }
-  .pickup-warn { color: var(--warn); font-size: 12.5px; margin-top: 6px; }
-  .pickup-time-block { display: flex; flex-direction: column; gap: 2px; }
-  .pickup-time-line { display: block; }
-
-  /* ── DATE SELECTOR ── */
-  .date-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 10px;
-    margin-top: 4px;
-  }
-  .date-btn {
-    border: 1.5px solid var(--pale-dogwood-deep);
-    border-radius: 12px;
-    padding: 12px 8px;
-    background: var(--white);
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-    color: var(--text-mid);
-    font-family: 'Noto Serif TC', serif;
+  .pickup-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .pickup-warn {
+    color: var(--warn);
     font-size: 13px;
-    line-height: 1.5;
-  }
-  .date-btn:hover:not(:disabled) { border-color: var(--brown-light); background: var(--pale-dogwood-light); }
-  .date-btn.selected {
-    border-color: var(--brown);
-    background: var(--pale-dogwood);
-    color: var(--brown-deep);
+    margin-top: 8px;
     font-weight: 500;
   }
-  .date-btn:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-    background: #f5f5f5;
-  }
-  .date-btn .date-day { font-size: 11px; color: var(--text-light); }
-  .date-btn .date-full { font-size: 11px; color: var(--warn); font-weight: 500; margin-top: 2px; }
 
   /* ── BLUR GATE ── */
   .blur-gate {
@@ -244,41 +288,41 @@
     background: var(--blur-overlay);
     border-radius: 14px;
     z-index: 10;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-mid);
     letter-spacing: 0.06em;
   }
-  .blur-overlay-icon { font-size: 26px; opacity: 0.6; }
+  .blur-overlay-icon { font-size: 28px; opacity: 0.6; }
   .blur-gate:not(.locked) .blur-overlay { display: none; }
 
   /* ── NOTICE BOX ── */
   .notice-list { list-style: none; padding: 0; }
   .notice-list li {
-    font-size: 13.5px;
+    font-size: 14.5px;
     color: var(--text-mid);
-    padding: 7px 0;
+    padding: 9px 0;
     border-bottom: 1px dashed var(--pale-dogwood-deep);
-    line-height: 1.7;
+    line-height: 1.8;
     display: flex;
     gap: 8px;
   }
   .notice-list li:last-child { border-bottom: none; }
-  .notice-list li::before { content: '•'; color: var(--brown-light); flex-shrink: 0; }
+  .notice-list li::before { content: '•'; color: var(--brown-light); flex-shrink: 0; font-size: 16px; }
   .notice-list li strong { color: var(--text-dark); }
   .notice-box-extra {
     background: var(--pale-dogwood-light);
     border-radius: 10px;
-    padding: 14px 18px;
-    margin-top: 14px;
-    font-size: 13px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-size: 14px;
     color: var(--text-mid);
-    line-height: 2;
+    line-height: 2.1;
   }
   .notice-box-extra-line { display: block; padding: 3px 0; }
   .notice-box-extra-line + .notice-box-extra-line {
     border-top: 1px dashed var(--pale-dogwood-deep);
     margin-top: 3px;
-    padding-top: 6px;
+    padding-top: 7px;
   }
 
   /* ── PRODUCTS ── */
@@ -306,17 +350,17 @@
   .product-card:hover .product-img-wrap img { transform: scale(1.03); }
   .product-body { padding: 22px 24px; }
   .product-name {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 18px;
+    font-weight: 600;
     color: var(--text-dark);
     letter-spacing: 0.06em;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
   }
   .product-sub {
-    font-size: 12px;
+    font-size: 13.5px;
     color: var(--text-light);
     letter-spacing: 0.04em;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
 
   /* ── SIZE QUANTITY SELECTOR ── */
@@ -324,21 +368,31 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 11px 0;
+    padding: 13px 0;
     border-bottom: 1px solid var(--pale-dogwood-light);
     gap: 8px;
   }
   .size-row:last-child { border-bottom: none; }
-  .size-label { font-size: 13.5px; color: var(--text-mid); }
-  .size-price { font-size: 13px; color: var(--brown); margin-left: 4px; }
+  .size-label {
+    font-size: 15px;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+  .size-price {
+    font-size: 15px;
+    color: var(--brown-deep);
+    font-weight: 600;
+    margin-left: 6px;
+  }
   .sold-out-tag {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--warn);
     background: #FFF0EB;
-    border: 1px solid #F0C4B0;
-    border-radius: 6px;
-    padding: 2px 8px;
+    border: 1.5px solid #F0C4B0;
+    border-radius: 8px;
+    padding: 4px 12px;
     white-space: nowrap;
+    font-weight: 500;
   }
   .qty-control {
     display: flex;
@@ -349,11 +403,11 @@
     flex-shrink: 0;
   }
   .qty-btn {
-    width: 34px; height: 34px;
+    width: 38px; height: 38px;
     background: var(--pale-dogwood-light);
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--brown);
     transition: background 0.15s;
     display: flex; align-items: center; justify-content: center;
@@ -362,14 +416,14 @@
   .qty-btn:hover:not(:disabled) { background: var(--pale-dogwood); }
   .qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .qty-num {
-    width: 36px; height: 34px;
+    width: 40px; height: 38px;
     text-align: center;
     border: none;
     border-left: 1px solid var(--pale-dogwood-deep);
     border-right: 1px solid var(--pale-dogwood-deep);
     background: var(--white);
     font-family: 'Noto Serif TC', serif;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-dark);
     outline: none;
   }
@@ -379,7 +433,7 @@
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     background: var(--pale-dogwood-light);
   }
   .addon-img-wrap img {
@@ -395,35 +449,47 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 11px 0;
+    padding: 13px 0;
     border-bottom: 1px solid var(--pale-dogwood-light);
     gap: 12px;
   }
   .addon-row:last-child { border-bottom: none; }
-  .addon-info { font-size: 13.5px; color: var(--text-mid); flex: 1; }
-  .addon-price { font-size: 12.5px; color: var(--brown); }
+  .addon-info {
+    font-size: 15px;
+    color: var(--text-dark);
+    flex: 1;
+    font-weight: 500;
+  }
+  .addon-price {
+    font-size: 14px;
+    color: var(--brown-deep);
+    font-weight: 600;
+  }
 
   /* ── BADGE SELECTOR ── */
   .badge-section-label {
-    font-size: 13.5px;
-    color: var(--text-mid);
-    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--text-dark);
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 6px;
+    font-weight: 500;
+    width: 100%;
   }
   .badge-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+    width: 100%;
   }
   .badge-btn {
     border: 1.5px solid var(--pale-dogwood-deep);
     border-radius: 100px;
-    padding: 8px 16px;
+    padding: 9px 18px;
     background: var(--white);
     cursor: pointer;
-    font-size: 12.5px;
+    font-size: 13.5px;
     color: var(--text-mid);
     font-family: 'Noto Serif TC', serif;
     transition: all 0.2s;
@@ -435,9 +501,7 @@
     background: var(--pale-dogwood);
     color: var(--brown-deep);
   }
-  .badge-btn.no-badge {
-    border-style: dashed;
-  }
+  .badge-btn.no-badge { border-style: dashed; }
   .badge-btn.no-badge.selected {
     border-style: solid;
     background: #F5F5F5;
@@ -451,48 +515,49 @@
   .summary-table tr { border-bottom: 1px dashed var(--pale-dogwood-deep); }
   .summary-table tr:last-child { border-bottom: none; }
   .summary-table td {
-    padding: 9px 4px;
-    font-size: 13.5px;
+    padding: 10px 4px;
+    font-size: 14.5px;
     color: var(--text-mid);
     vertical-align: top;
   }
-  .summary-table td:last-child { text-align: right; color: var(--text-dark); white-space: nowrap; }
+  .summary-table td:last-child { text-align: right; color: var(--text-dark); white-space: nowrap; font-weight: 500; }
   .summary-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 18px;
-    padding-top: 18px;
+    margin-top: 20px;
+    padding-top: 20px;
     border-top: 1.5px solid var(--pale-dogwood-deep);
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 18px;
+    font-weight: 600;
     color: var(--brown-deep);
   }
   .summary-empty {
     text-align: center;
     color: var(--text-light);
-    font-size: 13px;
+    font-size: 14px;
     padding: 20px 0;
     letter-spacing: 0.04em;
   }
 
   /* ── FORM INPUTS ── */
-  .field-group { margin-bottom: 18px; }
+  .field-group { margin-bottom: 20px; }
   .field-label {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-mid);
     letter-spacing: 0.06em;
-    margin-bottom: 8px;
+    margin-bottom: 9px;
+    font-weight: 500;
   }
   .field-label .req { color: var(--warn); margin-left: 2px; }
   .field-input {
     width: 100%;
-    padding: 13px 16px;
+    padding: 14px 16px;
     border: 1.5px solid var(--pale-dogwood-deep);
     border-radius: 12px;
     font-family: 'Noto Serif TC', serif;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-dark);
     background: var(--white);
     outline: none;
@@ -537,14 +602,14 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 16px 20px;
+    padding: 18px 22px;
     background: var(--pale-dogwood-light);
     border-radius: 14px;
     border: 1.5px solid var(--pale-dogwood-deep);
     margin-bottom: 20px;
   }
   .consent-check {
-    width: 18px; height: 18px;
+    width: 20px; height: 20px;
     border: 1.5px solid var(--brown-light);
     border-radius: 4px;
     flex-shrink: 0;
@@ -560,22 +625,22 @@
     content: '✓';
     position: absolute;
     color: white;
-    font-size: 12px;
+    font-size: 13px;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
   }
-  .consent-text { font-size: 13px; color: var(--text-mid); line-height: 1.7; }
+  .consent-text { font-size: 14px; color: var(--text-mid); line-height: 1.8; }
 
   /* ── SUBMIT BUTTON ── */
   .submit-btn {
     width: 100%;
-    padding: 17px;
+    padding: 18px;
     background: var(--brown);
     color: white;
     border: none;
     border-radius: 14px;
     font-family: 'Noto Serif TC', serif;
-    font-size: 15px;
+    font-size: 16px;
     letter-spacing: 0.15em;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
@@ -685,9 +750,13 @@
     </div>
   </div>
 
-  <!-- SECTION 1: DATE SELECTOR -->
+  <!-- SECTION 1: DATE SELECTOR（移到說明欄前面）-->
   <div class="section-card">
-    <div class="section-label"><span class="dot"></span>選擇自取日期</div>
+    <div class="date-section-title"><span class="dot"></span>選擇自取日期</div>
+
+    <div class="date-grid" id="dateGrid">
+      <!-- Rendered by JS -->
+    </div>
 
     <div class="pickup-info-box">
       <div class="pickup-info-row">
@@ -696,16 +765,12 @@
       </div>
       <div class="pickup-info-row">
         <span class="pickup-icon">🕐</span>
-        <div class="pickup-time-block">
-          <span class="pickup-time-line">週四・週五　17:30–18:00</span>
-          <span class="pickup-time-line">週六・週日　15:30–16:00</span>
+        <div>
+          <div>週五　17:30 – 18:00</div>
+          <div>週六・週日　12:30 – 13:00</div>
         </div>
       </div>
       <div class="pickup-warn">⚠ 不提早開放，也不延後關閉，請準時前往</div>
-    </div>
-
-    <div class="date-grid" id="dateGrid">
-      <!-- Rendered by JS -->
     </div>
   </div>
 
@@ -725,7 +790,7 @@
       <span class="notice-box-extra-line">四吋尺寸　約 16×16×13 cm</span>
       <span class="notice-box-extra-line">六吋尺寸　約 21×21×17 cm</span>
       <span class="notice-box-extra-line">蛋糕捲尺寸　約 17×9.5×7 cm</span>
-      <span class="notice-box-extra-line" style="color:var(--warn);font-size:12px;">外盒非防水材質，雨天請自備防水保冷袋</span>
+      <span class="notice-box-extra-line" style="color:var(--warn);font-size:13px;">外盒非防水材質，雨天請自備防水保冷袋</span>
     </div>
   </div>
 
@@ -803,7 +868,7 @@
     <div class="section-card">
       <div class="section-label"><span class="dot"></span>加購項目</div>
 
-      <!-- Addon image block (responsive, any aspect ratio) -->
+      <!-- 加購圖片 -->
       <div class="addon-img-wrap">
         <img src="https://gangshr.github.io/mothers-day-form/3.JPG"
              alt="加購品項示意圖"
@@ -839,7 +904,7 @@
         <!-- 插牌 -->
         <div class="addon-row" style="flex-wrap:wrap; gap:10px; padding-bottom:14px; align-items:flex-start;">
           <div class="badge-section-label">🏷 插牌選擇</div>
-          <div class="badge-grid" style="width:100%;">
+          <div class="badge-grid">
             <button class="badge-btn" onclick="toggleBadge(this)" data-val="Happy Mother's Day">
               <span class="badge-check"></span>Happy Mother's Day
             </button>
@@ -954,49 +1019,39 @@
 <script>
 // ══════════════════════════════════════════════════════
 // ① 商品管理 Google Sheet CSV 網址
-//    格式說明見底部教學
 // ══════════════════════════════════════════════════════
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgQExirhiT9Nd-lw4wGWhh--E7gI7fcXDEo8m8OdejoMFWurEebXXfvC50Lh-KfPE6rc4TOwS9bgjO/pub?gid=757017754&single=true&output=csv';
 
 // ══════════════════════════════════════════════════════
-// ② EmailJS 設定（已串入）
+// ② EmailJS 設定
 // ══════════════════════════════════════════════════════
 const EMAILJS_SERVICE_ID  = 'service_7voasbi';
 const EMAILJS_TEMPLATE_ID = 'template_n6vus6s';
 const EMAILJS_PUBLIC_KEY  = 'Gz12-P0eutZoR1x4V';
 
 // ══════════════════════════════════════════════════════
-// ③ Google Apps Script 收單 URL
+// ③ Google Apps Script 收單 + 扣庫存 URL
 // ══════════════════════════════════════════════════════
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJGoVg4pxc5krRg_-6r_M_N1vsUVkuCQqRmUOD7nTpVS5-mESDJPppq74fwsl5lKgA/exec';
 
 // ── 自取日期設定 ──
-// dateKey 用來對應 Sheet 的庫存欄位（例如 '0508'）
+// dateKey 對應 Sheet 庫存欄位的日期前綴（例如 '0508'）
 const PICKUP_DATES = [
   { label: '5月8日（五）',  time: '17:30–18:00', dateKey: '0508' },
   { label: '5月9日（六）',  time: '12:30–13:00', dateKey: '0509' },
-  { label: '5月10日（四）', time: '12:30–13:00', dateKey: '0510' },
+  { label: '5月10日（日）', time: '12:30–13:00', dateKey: '0510' },
 ];
 
 // ── 商品預設值（Sheet 讀取失敗時使用）──
 let PRODUCT_DATA = {
-  p1: {
-    name: '鐵觀音烏龍蜜桃鮮奶油蛋糕',
-    sub:  '現做鮮奶油・細緻茶香・蜜桃果餡',
-    price6: 1500,
-    price4: 880,
-  },
-  p2: {
-    name:  '烏龍蜜桃蛋糕捲',
-    sub:   '單一尺寸・茶香卷心・細膩口感',
-    price: 580,
-  },
+  p1: { name: '鐵觀音烏龍蜜桃鮮奶油蛋糕', sub: '現做鮮奶油・細緻茶香・蜜桃果餡', price6: 1500, price4: 880 },
+  p2: { name: '烏龍蜜桃蛋糕捲', sub: '單一尺寸・茶香卷心・細膩口感', price: 580 },
 };
 
-// 每日每品項庫存：{ '0508': { 'p1-6': 10, 'p1-4': 10, 'p2': 10 }, ... }
+// 每日每品項庫存
+// 新格式欄位名：0508_6吋、0508_4吋、0508_蛋糕捲
 let dailyStock = {};
 
-// 價格 / 標籤（動態更新）
 const PRICES = { 'p1-6': 1500, 'p1-4': 880, 'p2': 580, 'a-fork': 30, 'a-candle-l': 20, 'a-candle-s': 10 };
 const LABELS = {
   'p1-6': '鐵觀音烏龍蜜桃鮮奶油蛋糕 6吋',
@@ -1015,10 +1070,6 @@ let countdownTimer  = null;
 
 // ── 從 Google Sheets CSV 讀取資料 ──
 async function loadSheetData() {
-  if (SHEET_CSV_URL === 'YOUR_GOOGLE_SHEET_CSV_URL') {
-    renderDates();
-    return;
-  }
   try {
     const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
     const text = await res.text();
@@ -1030,10 +1081,20 @@ async function loadSheetData() {
 }
 
 /*
-  Sheet 格式（商品管理分頁，CSV 輸出）
-  第 1 列（標題）: key | name | sub | price_6 | price_4 | price | 0508_p16 | 0508_p14 | 0508_p2 | 0509_p16 | ...
-  第 2 列（p1）  : p1  | 鐵觀音... | 現做... | 1500 | 880 |  | 10 | 10 | 10 | 8 | 8 | 8 | ...
-  第 3 列（p2）  : p2  | 烏龍... | 單一... |  |  | 580 | 10 | 10 | 10 | ...
+  ════════════════════════════════════════════
+  新版 Sheet「商品管理」格式說明（兩段式）
+  ════════════════════════════════════════════
+
+  【A段：商品說明】（第1列標題）
+  key | name | sub | price_6吋 | price_4吋 | price_蛋糕捲
+
+  p1  | 鐵觀音烏龍蜜桃鮮奶油蛋糕 | 現做鮮奶油... | 1500 | 880 |
+  p2  | 烏龍蜜桃蛋糕捲 | 單一尺寸... |  |  | 580
+
+  【B段：每日庫存】（接續後面欄位）
+  0508_6吋 | 0508_4吋 | 0508_蛋糕捲 | 0509_6吋 | 0509_4吋 | 0509_蛋糕捲 | 0510_6吋 | 0510_4吋 | 0510_蛋糕捲
+
+  建議在 Google Sheets 裡用「凍結欄位」或「背景色」區分 A / B 兩段
 */
 function parseSheetCSV(text) {
   const rows = text.trim().split('\n');
@@ -1051,17 +1112,17 @@ function parseSheetCSV(text) {
       if (cols[3]) PRODUCT_DATA.p1.price6 = parseInt(cols[3]);
       if (cols[4]) PRODUCT_DATA.p1.price4 = parseInt(cols[4]);
 
-      // 讀取每日庫存欄位
       headers.forEach((h, i) => {
-        const m = h.match(/^(\d{4})_p16$/);
-        if (m) {
-          const dk = m[1];
+        // 新欄位名格式：0508_6吋、0508_4吋
+        const m6 = h.match(/^(\d{4})_6吋$/);
+        if (m6) {
+          const dk = m6[1];
           if (!dailyStock[dk]) dailyStock[dk] = {};
           dailyStock[dk]['p1-6'] = parseInt(cols[i]) || 0;
         }
-        const m2 = h.match(/^(\d{4})_p14$/);
-        if (m2) {
-          const dk = m2[1];
+        const m4 = h.match(/^(\d{4})_4吋$/);
+        if (m4) {
+          const dk = m4[1];
           if (!dailyStock[dk]) dailyStock[dk] = {};
           dailyStock[dk]['p1-4'] = parseInt(cols[i]) || 0;
         }
@@ -1074,7 +1135,8 @@ function parseSheetCSV(text) {
       if (cols[5]) PRODUCT_DATA.p2.price = parseInt(cols[5]);
 
       headers.forEach((h, i) => {
-        const m = h.match(/^(\d{4})_p2$/);
+        // 新欄位名格式：0508_蛋糕捲
+        const m = h.match(/^(\d{4})_蛋糕捲$/);
         if (m) {
           const dk = m[1];
           if (!dailyStock[dk]) dailyStock[dk] = {};
@@ -1092,15 +1154,14 @@ function parseSheetCSV(text) {
   LABELS['p1-4'] = PRODUCT_DATA.p1.name + ' 4吋';
   LABELS['p2']   = PRODUCT_DATA.p2.name;
 
-  // 更新商品顯示文字
   const el = (id) => document.getElementById(id);
-  if (el('prod1-name')) el('prod1-name').textContent = PRODUCT_DATA.p1.name;
-  if (el('prod1-sub'))  el('prod1-sub').textContent  = PRODUCT_DATA.p1.sub;
+  if (el('prod1-name'))   el('prod1-name').textContent   = PRODUCT_DATA.p1.name;
+  if (el('prod1-sub'))    el('prod1-sub').textContent    = PRODUCT_DATA.p1.sub;
   if (el('prod1-price6')) el('prod1-price6').textContent = '$' + PRODUCT_DATA.p1.price6.toLocaleString();
   if (el('prod1-price4')) el('prod1-price4').textContent = '$' + PRODUCT_DATA.p1.price4.toLocaleString();
-  if (el('prod2-name')) el('prod2-name').textContent = PRODUCT_DATA.p2.name;
-  if (el('prod2-sub'))  el('prod2-sub').textContent  = PRODUCT_DATA.p2.sub;
-  if (el('prod2-price')) el('prod2-price').textContent = '$' + PRODUCT_DATA.p2.price.toLocaleString();
+  if (el('prod2-name'))   el('prod2-name').textContent   = PRODUCT_DATA.p2.name;
+  if (el('prod2-sub'))    el('prod2-sub').textContent    = PRODUCT_DATA.p2.sub;
+  if (el('prod2-price'))  el('prod2-price').textContent  = '$' + PRODUCT_DATA.p2.price.toLocaleString();
 }
 
 // ── 渲染日期按鈕（含額滿判斷）──
@@ -1112,7 +1173,6 @@ function renderDates() {
     btn.className = 'date-btn';
     btn.dataset.dateKey = d.dateKey;
 
-    // 判斷是否全部售完
     const stock = dailyStock[d.dateKey];
     const isFull = stock
       ? (stock['p1-6'] <= 0 && stock['p1-4'] <= 0 && stock['p2'] <= 0)
@@ -1120,16 +1180,16 @@ function renderDates() {
 
     if (isFull) {
       btn.disabled = true;
-      btn.innerHTML = `<div>${d.label}</div><div class="date-day">${d.time}</div><div class="date-full">已額滿</div>`;
+      btn.innerHTML = `<span class="date-main">${d.label}</span><span class="date-time">${d.time}</span><span class="date-full">已額滿</span>`;
     } else {
-      btn.innerHTML = `<div>${d.label}</div><div class="date-day">${d.time}</div>`;
+      btn.innerHTML = `<span class="date-main">${d.label}</span><span class="date-time">${d.time}</span>`;
       btn.onclick = () => selectDate(d.label + '　' + d.time, d.dateKey, btn);
     }
     grid.appendChild(btn);
   });
 }
 
-// ── 選擇日期 & 更新品項庫存 ──
+// ── 選擇日期 ──
 function selectDate(val, dateKey, btn) {
   document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -1137,13 +1197,11 @@ function selectDate(val, dateKey, btn) {
   selectedDateKey = dateKey;
   document.getElementById('mainGate').classList.remove('locked');
 
-  // 重置數量
   ['p1-6','p1-4','p2'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = 0;
   });
 
-  // 套用當日庫存
   applyDailyStock(dateKey);
   updateSummary();
 }
@@ -1151,8 +1209,8 @@ function selectDate(val, dateKey, btn) {
 function applyDailyStock(dateKey) {
   const stock = dailyStock[dateKey];
   ['p1-6','p1-4','p2'].forEach(id => {
-    // 先清除舊的售完標籤
-    const row = document.getElementById('row-' + id);
+    const rowId = id === 'p2' ? 'row-p2' : 'row-' + id;
+    const row  = document.getElementById(rowId);
     if (row) {
       row.querySelectorAll('.sold-out-tag').forEach(t => t.remove());
       row.querySelectorAll('.qty-btn').forEach(b => b.disabled = false);
@@ -1160,9 +1218,9 @@ function applyDailyStock(dateKey) {
     const ctrl = document.getElementById('ctrl-' + id);
     if (ctrl) ctrl.style.display = '';
 
-    if (!stock) return; // Sheets 未設定，不限制
+    if (!stock) return;
 
-    const qty = stock[id] ?? 99;
+    const qty   = stock[id] ?? 99;
     const input = document.getElementById(id);
     if (!input) return;
     input.max = qty;
@@ -1193,13 +1251,11 @@ function changeQty(id, delta) {
 
 // ── BADGE ──
 function toggleBadge(btn) {
-  // 若已選「不需要」，先取消
   if (noBadgeSelected) {
     noBadgeSelected = false;
     document.querySelector('.badge-btn.no-badge').classList.remove('selected');
     document.querySelector('.badge-btn.no-badge .badge-check').textContent = '';
   }
-
   btn.classList.toggle('selected');
   const val = btn.dataset.val;
   if (btn.classList.contains('selected')) {
@@ -1213,13 +1269,11 @@ function toggleBadge(btn) {
 }
 
 function toggleNoBadge(btn) {
-  // 取消所有已選插牌
   selectedBadges = [];
   document.querySelectorAll('.badge-btn:not(.no-badge)').forEach(b => {
     b.classList.remove('selected');
     b.querySelector('.badge-check').textContent = '';
   });
-
   btn.classList.toggle('selected');
   noBadgeSelected = btn.classList.contains('selected');
   btn.querySelector('.badge-check').textContent = noBadgeSelected ? '✓' : '';
@@ -1242,7 +1296,6 @@ function updateSummary() {
     }
   });
 
-  // 插牌行
   if (noBadgeSelected) {
     rows += `<tr><td colspan="3">🏷 插牌：不需要</td></tr>`;
   } else if (selectedBadges.length > 0) {
@@ -1300,10 +1353,9 @@ function submitOrder() {
 }
 
 function buildOrderData(name, phone, email, nickname) {
-  // 分開欄位以符合 Sheet 欄位順序
-  const p16qty  = parseInt(document.getElementById('p1-6')?.value || 0);
-  const p14qty  = parseInt(document.getElementById('p1-4')?.value || 0);
-  const p2qty   = parseInt(document.getElementById('p2')?.value   || 0);
+  const p16qty  = parseInt(document.getElementById('p1-6')?.value  || 0);
+  const p14qty  = parseInt(document.getElementById('p1-4')?.value  || 0);
+  const p2qty   = parseInt(document.getElementById('p2')?.value    || 0);
   const forkqty = parseInt(document.getElementById('a-fork')?.value || 0);
   const candlel = parseInt(document.getElementById('a-candle-l')?.value || 0);
   const candles = parseInt(document.getElementById('a-candle-s')?.value || 0);
@@ -1311,16 +1363,14 @@ function buildOrderData(name, phone, email, nickname) {
   const total = p16qty * PRICES['p1-6'] + p14qty * PRICES['p1-4']
               + p2qty * PRICES['p2'] + forkqty * 30 + candlel * 20 + candles * 10;
 
-  // 插牌文字
   let badgeText = '無';
   if (noBadgeSelected) badgeText = '不需要';
   else if (selectedBadges.length > 0) badgeText = selectedBadges.join('、');
 
-  // 供訂單明細顯示用
   const itemLines = [];
   if (p16qty > 0)  itemLines.push(`${LABELS['p1-6']} ×${p16qty}  $${p16qty * PRICES['p1-6']}`);
   if (p14qty > 0)  itemLines.push(`${LABELS['p1-4']} ×${p14qty}  $${p14qty * PRICES['p1-4']}`);
-  if (p2qty > 0)   itemLines.push(`${LABELS['p2']}   ×${p2qty}   $${p2qty  * PRICES['p2']}`);
+  if (p2qty > 0)   itemLines.push(`${LABELS['p2']} ×${p2qty}  $${p2qty * PRICES['p2']}`);
   if (forkqty > 0) itemLines.push(`刀叉組 ×${forkqty}  $${forkqty * 30}`);
   if (candlel > 0) itemLines.push(`蠟燭（長）×${candlel}  $${candlel * 20}`);
   if (candles > 0) itemLines.push(`蠟燭（短）×${candles}  $${candles * 10}`);
@@ -1328,24 +1378,26 @@ function buildOrderData(name, phone, email, nickname) {
   return {
     timestamp: new Date().toLocaleString('zh-TW'),
     date: selectedDate,
+    dateKey: selectedDateKey,   // ← 傳給 Apps Script 用來扣庫存
     email, name, phone, nickname,
-    // 個別欄位給 Sheets
-    p1_6:     p16qty  > 0 ? `${p16qty}個` : '',
-    p1_4:     p14qty  > 0 ? `${p14qty}個` : '',
-    p2:       p2qty   > 0 ? `${p2qty}條`  : '',
-    a_fork:   forkqty > 0 ? `${forkqty}份` : '',
+    p1_6:      p16qty  > 0 ? `${p16qty}個` : '',
+    p1_4:      p14qty  > 0 ? `${p14qty}個` : '',
+    p2:        p2qty   > 0 ? `${p2qty}條`  : '',
+    a_fork:    forkqty > 0 ? `${forkqty}份` : '',
     a_candlel: candlel > 0 ? `${candlel}支` : '',
     a_candles: candles > 0 ? `${candles}支` : '',
-    badges:   badgeText,
-    total:    '$' + total.toLocaleString(),
-    // 給 EmailJS 顯示
+    badges:    badgeText,
+    total:     '$' + total.toLocaleString(),
+    // 給 Apps Script 扣庫存用的純數字
+    qty_p16:   p16qty,
+    qty_p14:   p14qty,
+    qty_p2:    p2qty,
     order_items: itemLines.join('\n') || '（無）',
   };
 }
 
-// ── GOOGLE SHEETS ──
+// ── GOOGLE SHEETS（收單 + 扣庫存）──
 async function sendToGoogleSheets(data) {
-  if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL') return;
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
