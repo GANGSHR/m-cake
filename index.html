@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>苷舍 × 母親節蛋糕預購</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
     --pale-dogwood: #F2E4DF;
@@ -69,11 +71,6 @@
     margin-top: 8px;
     letter-spacing: 0.08em;
   }
-  .petal-deco {
-    font-size: 22px;
-    opacity: 0.5;
-    margin: 0 8px;
-  }
 
   /* ── MAIN CONTAINER ── */
   .form-wrap {
@@ -114,11 +111,6 @@
     border-radius: 50%;
     background: var(--brown-light);
     flex-shrink: 0;
-  }
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--pale-dogwood-deep);
-    margin: 18px 0;
   }
 
   /* ── STEP STRIP ── */
@@ -216,23 +208,27 @@
     font-size: 13px;
     line-height: 1.5;
   }
-  .date-btn:hover { border-color: var(--brown-light); background: var(--pale-dogwood-light); }
+  .date-btn:hover:not(:disabled) { border-color: var(--brown-light); background: var(--pale-dogwood-light); }
   .date-btn.selected {
     border-color: var(--brown);
     background: var(--pale-dogwood);
     color: var(--brown-deep);
     font-weight: 500;
   }
+  .date-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #f5f5f5;
+  }
   .date-btn .date-day { font-size: 11px; color: var(--text-light); }
+  .date-btn .date-full { font-size: 11px; color: var(--warn); font-weight: 500; margin-top: 2px; }
 
   /* ── BLUR GATE ── */
   .blur-gate {
     position: relative;
     transition: all 0.4s ease;
   }
-  .blur-gate.locked {
-    pointer-events: none;
-  }
+  .blur-gate.locked { pointer-events: none; }
   .blur-gate.locked > * {
     filter: blur(4px);
     opacity: 0.4;
@@ -256,10 +252,7 @@
   .blur-gate:not(.locked) .blur-overlay { display: none; }
 
   /* ── NOTICE BOX ── */
-  .notice-list {
-    list-style: none;
-    padding: 0;
-  }
+  .notice-list { list-style: none; padding: 0; }
   .notice-list li {
     font-size: 13.5px;
     color: var(--text-mid);
@@ -281,10 +274,7 @@
     color: var(--text-mid);
     line-height: 2;
   }
-  .notice-box-extra-line {
-    display: block;
-    padding: 3px 0;
-  }
+  .notice-box-extra-line { display: block; padding: 3px 0; }
   .notice-box-extra-line + .notice-box-extra-line {
     border-top: 1px dashed var(--pale-dogwood-deep);
     margin-top: 3px;
@@ -300,7 +290,6 @@
   }
   .product-img-wrap {
     width: 100%;
-    aspect-ratio: 4/3;
     overflow: hidden;
     background: var(--pale-dogwood-light);
     display: flex;
@@ -311,18 +300,10 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     transition: transform 0.4s;
   }
   .product-card:hover .product-img-wrap img { transform: scale(1.03); }
-  .product-img-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-light);
-    font-size: 13px;
-  }
-  .product-img-placeholder .ph-icon { font-size: 32px; opacity: 0.4; }
   .product-body { padding: 22px 24px; }
   .product-name {
     font-size: 16px;
@@ -345,17 +326,27 @@
     justify-content: space-between;
     padding: 11px 0;
     border-bottom: 1px solid var(--pale-dogwood-light);
+    gap: 8px;
   }
   .size-row:last-child { border-bottom: none; }
   .size-label { font-size: 13.5px; color: var(--text-mid); }
   .size-price { font-size: 13px; color: var(--brown); margin-left: 4px; }
+  .sold-out-tag {
+    font-size: 12px;
+    color: var(--warn);
+    background: #FFF0EB;
+    border: 1px solid #F0C4B0;
+    border-radius: 6px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
   .qty-control {
     display: flex;
     align-items: center;
-    gap: 0;
     border: 1.5px solid var(--pale-dogwood-deep);
     border-radius: 10px;
     overflow: hidden;
+    flex-shrink: 0;
   }
   .qty-btn {
     width: 34px; height: 34px;
@@ -368,7 +359,8 @@
     display: flex; align-items: center; justify-content: center;
     font-family: inherit;
   }
-  .qty-btn:hover { background: var(--pale-dogwood); }
+  .qty-btn:hover:not(:disabled) { background: var(--pale-dogwood); }
+  .qty-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .qty-num {
     width: 36px; height: 34px;
     text-align: center;
@@ -382,12 +374,23 @@
     outline: none;
   }
 
-  /* ── ADD-ONS ── */
-  .addon-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
+  /* ── ADDON IMAGE ── */
+  .addon-img-wrap {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    background: var(--pale-dogwood-light);
   }
+  .addon-img-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  /* ── ADD-ONS ── */
+  .addon-grid { display: grid; grid-template-columns: 1fr; gap: 0; }
   .addon-row {
     display: flex;
     align-items: center;
@@ -400,12 +403,19 @@
   .addon-info { font-size: 13.5px; color: var(--text-mid); flex: 1; }
   .addon-price { font-size: 12.5px; color: var(--brown); }
 
-  /* ── BADGE SELECTOR (插牌) ── */
+  /* ── BADGE SELECTOR ── */
+  .badge-section-label {
+    font-size: 13.5px;
+    color: var(--text-mid);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
   .badge-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 4px;
   }
   .badge-btn {
     border: 1.5px solid var(--pale-dogwood-deep);
@@ -424,6 +434,15 @@
     border-color: var(--brown);
     background: var(--pale-dogwood);
     color: var(--brown-deep);
+  }
+  .badge-btn.no-badge {
+    border-style: dashed;
+  }
+  .badge-btn.no-badge.selected {
+    border-style: solid;
+    background: #F5F5F5;
+    border-color: #AAA;
+    color: #555;
   }
   .badge-check { font-size: 11px; }
 
@@ -483,6 +502,15 @@
   .field-input::placeholder { color: var(--text-light); }
 
   /* ── POLICY ── */
+  .policy-section-card {
+    background: #FFF8F0;
+    border-radius: 20px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    border: 1.5px solid #E8A87C;
+    box-shadow: 0 2px 20px rgba(200,100,60,0.10);
+  }
+  @media(max-width:600px){ .policy-section-card { padding: 28px 22px; } }
   .policy-content {
     display: none;
     margin-top: 14px;
@@ -501,25 +529,11 @@
     letter-spacing: 0.08em;
     user-select: none;
   }
-  .policy-arrow {
-    transition: transform 0.3s;
-    color: var(--brown-light);
-    font-size: 13px;
-  }
+  .policy-arrow { transition: transform 0.3s; color: var(--brown-light); font-size: 13px; }
   .policy-toggle.open .policy-arrow { transform: rotate(180deg); }
 
-  /* ── POLICY HIGHLIGHT ── */
-  .policy-section-card {
-    background: #FFF8F0;
-    border-radius: 20px;
-    padding: 36px 40px;
-    margin-bottom: 20px;
-    border: 1.5px solid #E8A87C;
-    box-shadow: 0 2px 20px rgba(200,100,60,0.10);
-  }
-  @media(max-width:600px){
-    .policy-section-card { padding: 28px 22px; }
-  }
+  /* ── CONSENT ROW ── */
+  .consent-row {
     display: flex;
     align-items: flex-start;
     gap: 12px;
@@ -538,25 +552,19 @@
     cursor: pointer;
     appearance: none;
     background: var(--white);
-    display: flex; align-items: center; justify-content: center;
     transition: all 0.2s;
     position: relative;
   }
-  .consent-check:checked {
-    background: var(--brown);
-    border-color: var(--brown);
-  }
+  .consent-check:checked { background: var(--brown); border-color: var(--brown); }
   .consent-check:checked::after {
     content: '✓';
     position: absolute;
     color: white;
     font-size: 12px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
   }
-  .consent-text {
-    font-size: 13px;
-    color: var(--text-mid);
-    line-height: 1.7;
-  }
+  .consent-text { font-size: 13px; color: var(--text-mid); line-height: 1.7; }
 
   /* ── SUBMIT BUTTON ── */
   .submit-btn {
@@ -622,15 +630,9 @@
     transition: all 0.2s;
     border: 1.5px solid transparent;
   }
-  .contact-btn.fb {
-    background: #1877F2;
-    color: white;
-  }
+  .contact-btn.fb { background: #1877F2; color: white; }
   .contact-btn.fb:hover { background: #166FE5; }
-  .contact-btn.line {
-    background: #06C755;
-    color: white;
-  }
+  .contact-btn.line { background: #06C755; color: white; }
   .contact-btn.line:hover { background: #05B34C; }
 
   @keyframes fadeIn {
@@ -703,7 +705,7 @@
     </div>
 
     <div class="date-grid" id="dateGrid">
-      <!-- Dates will be rendered by JS -->
+      <!-- Rendered by JS -->
     </div>
   </div>
 
@@ -727,7 +729,7 @@
     </div>
   </div>
 
-  <!-- SECTIONS BELOW: BLUR-GATED -->
+  <!-- BLUR-GATED SECTIONS -->
   <div class="blur-gate locked" id="mainGate">
     <div class="blur-overlay">
       <div class="blur-overlay-icon">🎂</div>
@@ -741,28 +743,32 @@
       <!-- Product 1 -->
       <div class="product-card">
         <div class="product-img-wrap" id="img1-wrap">
-          <div class="product-img-placeholder">
-            <div class="ph-icon">🎂</div>
-            <span>https://gangshr.github.io/mothers-day-form/1.JPG</span>
-          </div>
+          <img src="https://gangshr.github.io/mothers-day-form/1.JPG"
+               alt="鐵觀音烏龍蜜桃鮮奶油蛋糕"
+               style="width:100%;height:auto;object-fit:contain;"
+               onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#A89088\'>🎂 商品圖片</div>'">
         </div>
         <div class="product-body">
           <div class="product-name" id="prod1-name">鐵觀音烏龍蜜桃鮮奶油蛋糕</div>
           <div class="product-sub" id="prod1-sub">現做鮮奶油・細緻茶香・蜜桃果餡</div>
-          <div class="size-row">
+          <div class="size-row" id="row-p1-6">
             <span class="size-label">6吋 <span class="size-price" id="prod1-price6">$1,500</span></span>
-            <div class="qty-control">
-              <button class="qty-btn" onclick="changeQty('p1-6', -1)">−</button>
-              <input class="qty-num" type="number" id="p1-6" value="0" min="0" max="10" readonly>
-              <button class="qty-btn" onclick="changeQty('p1-6', 1)">＋</button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="qty-control" id="ctrl-p1-6">
+                <button class="qty-btn" onclick="changeQty('p1-6', -1)">−</button>
+                <input class="qty-num" type="number" id="p1-6" value="0" min="0" max="99" readonly>
+                <button class="qty-btn" onclick="changeQty('p1-6', 1)">＋</button>
+              </div>
             </div>
           </div>
-          <div class="size-row">
+          <div class="size-row" id="row-p1-4">
             <span class="size-label">4吋 <span class="size-price" id="prod1-price4">$880</span></span>
-            <div class="qty-control">
-              <button class="qty-btn" onclick="changeQty('p1-4', -1)">−</button>
-              <input class="qty-num" type="number" id="p1-4" value="0" min="0" max="10" readonly>
-              <button class="qty-btn" onclick="changeQty('p1-4', 1)">＋</button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="qty-control" id="ctrl-p1-4">
+                <button class="qty-btn" onclick="changeQty('p1-4', -1)">−</button>
+                <input class="qty-num" type="number" id="p1-4" value="0" min="0" max="99" readonly>
+                <button class="qty-btn" onclick="changeQty('p1-4', 1)">＋</button>
+              </div>
             </div>
           </div>
         </div>
@@ -771,20 +777,22 @@
       <!-- Product 2 -->
       <div class="product-card">
         <div class="product-img-wrap" id="img2-wrap">
-          <div class="product-img-placeholder">
-            <div class="ph-icon">🍰</div>
-            <span>商品圖片</span>
-          </div>
+          <img src="https://gangshr.github.io/mothers-day-form/2.JPG"
+               alt="烏龍蜜桃蛋糕捲"
+               style="width:100%;height:auto;object-fit:contain;"
+               onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#A89088\'>🍰 商品圖片</div>'">
         </div>
         <div class="product-body">
           <div class="product-name" id="prod2-name">烏龍蜜桃蛋糕捲</div>
           <div class="product-sub" id="prod2-sub">單一尺寸・茶香卷心・細膩口感</div>
-          <div class="size-row">
+          <div class="size-row" id="row-p2">
             <span class="size-label">蛋糕捲 <span class="size-price" id="prod2-price">$580</span></span>
-            <div class="qty-control">
-              <button class="qty-btn" onclick="changeQty('p2', -1)">−</button>
-              <input class="qty-num" type="number" id="p2" value="0" min="0" max="10" readonly>
-              <button class="qty-btn" onclick="changeQty('p2', 1)">＋</button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="qty-control" id="ctrl-p2">
+                <button class="qty-btn" onclick="changeQty('p2', -1)">−</button>
+                <input class="qty-num" type="number" id="p2" value="0" min="0" max="99" readonly>
+                <button class="qty-btn" onclick="changeQty('p2', 1)">＋</button>
+              </div>
             </div>
           </div>
         </div>
@@ -794,6 +802,14 @@
     <!-- SECTION 4: ADD-ONS -->
     <div class="section-card">
       <div class="section-label"><span class="dot"></span>加購項目</div>
+
+      <!-- Addon image block (responsive, any aspect ratio) -->
+      <div class="addon-img-wrap">
+        <img src="https://gangshr.github.io/mothers-day-form/3.JPG"
+             alt="加購品項示意圖"
+             onerror="this.parentElement.style.display='none'">
+      </div>
+
       <div class="addon-grid">
         <div class="addon-row">
           <span class="addon-info">🍴 刀叉組 <span class="addon-price">$30 / 份</span></span>
@@ -819,9 +835,11 @@
             <button class="qty-btn" onclick="changeQty('a-candle-s', 1)">＋</button>
           </div>
         </div>
-        <div class="addon-row" style="flex-wrap:wrap; gap:10px; padding-bottom:14px;">
-          <span class="addon-info">🏷 插牌選擇</span>
-          <div class="badge-grid" style="width:100%; margin-top:10px;">
+
+        <!-- 插牌 -->
+        <div class="addon-row" style="flex-wrap:wrap; gap:10px; padding-bottom:14px; align-items:flex-start;">
+          <div class="badge-section-label">🏷 插牌選擇</div>
+          <div class="badge-grid" style="width:100%;">
             <button class="badge-btn" onclick="toggleBadge(this)" data-val="Happy Mother's Day">
               <span class="badge-check"></span>Happy Mother's Day
             </button>
@@ -830,6 +848,9 @@
             </button>
             <button class="badge-btn" onclick="toggleBadge(this)" data-val="Happy Anniversary">
               <span class="badge-check"></span>Happy Anniversary
+            </button>
+            <button class="badge-btn no-badge" onclick="toggleNoBadge(this)" data-val="no-badge">
+              <span class="badge-check"></span>不需要插牌
             </button>
           </div>
         </div>
@@ -886,7 +907,7 @@
           <li><span>退換貨僅限於商品本身瑕疵可歸咎於我方，不接受客製化商品、已拆封、食用、失溫及保存不良之商品的退換貨申請，敬請見諒。</span></li>
         </ul>
       </div>
-    </div><!-- /policy-section-card -->
+    </div>
 
     <!-- CONSENT + SUBMIT -->
     <div class="consent-row">
@@ -932,189 +953,277 @@
 
 <script>
 // ══════════════════════════════════════════════════════
-// ① Google Sheets 商品資料來源設定
-//    請將下方 SHEET_CSV_URL 換成你的試算表公開 CSV 網址
-//    步驟見頁底教學
+// ① 商品管理 Google Sheet CSV 網址
+//    格式說明見底部教學
 // ══════════════════════════════════════════════════════
 const SHEET_CSV_URL = 'YOUR_GOOGLE_SHEET_CSV_URL';
 
-// 商品預設值（當 Google Sheets 無法讀取時使用）
+// ══════════════════════════════════════════════════════
+// ② EmailJS 設定（已串入）
+// ══════════════════════════════════════════════════════
+const EMAILJS_SERVICE_ID  = 'service_7voasbi';
+const EMAILJS_TEMPLATE_ID = 'template_n6vus6s';
+const EMAILJS_PUBLIC_KEY  = 'Gz12-P0eutZoR1x4V';
+
+// ══════════════════════════════════════════════════════
+// ③ Google Apps Script 收單 URL
+// ══════════════════════════════════════════════════════
+const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL';
+
+// ── 自取日期設定 ──
+// dateKey 用來對應 Sheet 的庫存欄位（例如 '0508'）
+const PICKUP_DATES = [
+  { label: '5月8日（四）',  time: '17:30–18:00', dateKey: '0508' },
+  { label: '5月9日（五）',  time: '17:30–18:00', dateKey: '0509' },
+  { label: '5月10日（六）', time: '15:30–16:00', dateKey: '0510' },
+  { label: '5月11日（日）', time: '15:30–16:00', dateKey: '0511' },
+];
+
+// ── 商品預設值（Sheet 讀取失敗時使用）──
 let PRODUCT_DATA = {
   p1: {
     name: '鐵觀音烏龍蜜桃鮮奶油蛋糕',
-    sub: '現做鮮奶油・細緻茶香・蜜桃果餡',
+    sub:  '現做鮮奶油・細緻茶香・蜜桃果餡',
     price6: 1500,
     price4: 880,
-    stock6: 99,
-    stock4: 99,
   },
   p2: {
-    name: '烏龍蜜桃蛋糕捲',
-    sub: '單一尺寸・茶香卷心・細膩口感',
+    name:  '烏龍蜜桃蛋糕捲',
+    sub:   '單一尺寸・茶香卷心・細膩口感',
     price: 580,
-    stock: 99,
-  }
+  },
 };
 
-// 從 Google Sheets CSV 讀取商品資料
-async function loadProductData() {
-  if (SHEET_CSV_URL === 'YOUR_GOOGLE_SHEET_CSV_URL') return;
-  try {
-    const res = await fetch(SHEET_CSV_URL);
-    const text = await res.text();
-    const rows = text.trim().split('\n').slice(1); // 跳過標題列
-    rows.forEach(row => {
-      const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-      const key = cols[0];
-      if (key === 'p1') {
-        PRODUCT_DATA.p1.name    = cols[1] || PRODUCT_DATA.p1.name;
-        PRODUCT_DATA.p1.sub     = cols[2] || PRODUCT_DATA.p1.sub;
-        PRODUCT_DATA.p1.price6  = parseInt(cols[3]) || PRODUCT_DATA.p1.price6;
-        PRODUCT_DATA.p1.price4  = parseInt(cols[4]) || PRODUCT_DATA.p1.price4;
-        PRODUCT_DATA.p1.stock6  = parseInt(cols[5]) ?? PRODUCT_DATA.p1.stock6;
-        PRODUCT_DATA.p1.stock4  = parseInt(cols[6]) ?? PRODUCT_DATA.p1.stock4;
-      }
-      if (key === 'p2') {
-        PRODUCT_DATA.p2.name   = cols[1] || PRODUCT_DATA.p2.name;
-        PRODUCT_DATA.p2.sub    = cols[2] || PRODUCT_DATA.p2.sub;
-        PRODUCT_DATA.p2.price  = parseInt(cols[3]) || PRODUCT_DATA.p2.price;
-        PRODUCT_DATA.p2.stock  = parseInt(cols[5]) ?? PRODUCT_DATA.p2.stock;
-      }
-    });
-    renderProducts();
-  } catch(e) {
-    console.warn('無法讀取 Google Sheets 商品資料，使用預設值', e);
-  }
-}
+// 每日每品項庫存：{ '0508': { 'p1-6': 10, 'p1-4': 10, 'p2': 10 }, ... }
+let dailyStock = {};
 
-// 動態渲染商品卡片文字與庫存
-function renderProducts() {
-  const p1 = PRODUCT_DATA.p1;
-  const p2 = PRODUCT_DATA.p2;
-
-  // 品項一
-  const el1name = document.getElementById('prod1-name');
-  const el1sub  = document.getElementById('prod1-sub');
-  const el1p6   = document.getElementById('prod1-price6');
-  const el1p4   = document.getElementById('prod1-price4');
-  if (el1name) el1name.textContent = p1.name;
-  if (el1sub)  el1sub.textContent  = p1.sub;
-  if (el1p6)   el1p6.textContent   = '$' + p1.price6.toLocaleString();
-  if (el1p4)   el1p4.textContent   = '$' + p1.price4.toLocaleString();
-
-  // 品項二
-  const el2name = document.getElementById('prod2-name');
-  const el2sub  = document.getElementById('prod2-sub');
-  const el2p    = document.getElementById('prod2-price');
-  if (el2name) el2name.textContent = p2.name;
-  if (el2sub)  el2sub.textContent  = p2.sub;
-  if (el2p)    el2p.textContent    = '$' + p2.price.toLocaleString();
-
-  // 同步更新 PRICES / LABELS
-  PRICES['p1-6'] = p1.price6;
-  PRICES['p1-4'] = p1.price4;
-  PRICES['p2']   = p2.price;
-  LABELS['p1-6'] = p1.name + ' 6吋';
-  LABELS['p1-4'] = p1.name + ' 4吋';
-  LABELS['p2']   = p2.name;
-
-  // 庫存為 0 時鎖定按鈕
-  setStockLimit('p1-6', p1.stock6);
-  setStockLimit('p1-4', p1.stock4);
-  setStockLimit('p2',   p2.stock);
-}
-
-function setStockLimit(id, stock) {
-  const input = document.getElementById(id);
-  if (!input) return;
-  input.max = stock;
-  if (stock <= 0) {
-    input.value = 0;
-    const row = input.closest('.size-row');
-    if (row) {
-      row.querySelectorAll('.qty-btn').forEach(b => b.disabled = true);
-      const soldOut = document.createElement('span');
-      soldOut.style.cssText = 'font-size:12px;color:#C47A5A;margin-left:8px;';
-      soldOut.textContent = '已售完';
-      if (!row.querySelector('.sold-out-tag')) {
-        soldOut.className = 'sold-out-tag';
-        row.querySelector('.qty-control').insertAdjacentElement('afterend', soldOut);
-      }
-    }
-  }
-}
-
-// ── CONFIG ──
-const PICKUP_DATES = [
-  { label: '5月8日（四）', time: '17:30–18:00' },
-  { label: '5月9日（五）', time: '17:30–18:00' },
-  { label: '5月10日（六）', time: '15:30–16:00' },
-  { label: '5月11日（日）', time: '15:30–16:00' },
-];
-
-const PRICES = {
-  'p1-6': 1500,
-  'p1-4': 880,
-  'p2': 580,
-  'a-fork': 30,
-  'a-candle-l': 20,
-  'a-candle-s': 10,
-};
-
+// 價格 / 標籤（動態更新）
+const PRICES = { 'p1-6': 1500, 'p1-4': 880, 'p2': 580, 'a-fork': 30, 'a-candle-l': 20, 'a-candle-s': 10 };
 const LABELS = {
   'p1-6': '鐵觀音烏龍蜜桃鮮奶油蛋糕 6吋',
   'p1-4': '鐵觀音烏龍蜜桃鮮奶油蛋糕 4吋',
-  'p2': '烏龍蜜桃蛋糕捲',
-  'a-fork': '刀叉組',
+  'p2':   '烏龍蜜桃蛋糕捲',
+  'a-fork':     '刀叉組',
   'a-candle-l': '蠟燭（長）',
   'a-candle-s': '蠟燭（短）',
 };
 
-let selectedDate = '';
-let selectedBadges = [];
-let countdownTimer = null;
+let selectedDate    = '';
+let selectedDateKey = '';
+let selectedBadges  = [];
+let noBadgeSelected = false;
+let countdownTimer  = null;
 
-// ── RENDER DATES ──
+// ── 從 Google Sheets CSV 讀取資料 ──
+async function loadSheetData() {
+  if (SHEET_CSV_URL === 'YOUR_GOOGLE_SHEET_CSV_URL') {
+    renderDates();
+    return;
+  }
+  try {
+    const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
+    const text = await res.text();
+    parseSheetCSV(text);
+  } catch(e) {
+    console.warn('無法讀取 Sheets，使用預設值', e);
+  }
+  renderDates();
+}
+
+/*
+  Sheet 格式（商品管理分頁，CSV 輸出）
+  第 1 列（標題）: key | name | sub | price_6 | price_4 | price | 0508_p16 | 0508_p14 | 0508_p2 | 0509_p16 | ...
+  第 2 列（p1）  : p1  | 鐵觀音... | 現做... | 1500 | 880 |  | 10 | 10 | 10 | 8 | 8 | 8 | ...
+  第 3 列（p2）  : p2  | 烏龍... | 單一... |  |  | 580 | 10 | 10 | 10 | ...
+*/
+function parseSheetCSV(text) {
+  const rows = text.trim().split('\n');
+  if (rows.length < 2) return;
+
+  const headers = rows[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+
+  rows.slice(1).forEach(row => {
+    const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g,''));
+    const key  = cols[0];
+
+    if (key === 'p1') {
+      if (cols[1]) PRODUCT_DATA.p1.name   = cols[1];
+      if (cols[2]) PRODUCT_DATA.p1.sub    = cols[2];
+      if (cols[3]) PRODUCT_DATA.p1.price6 = parseInt(cols[3]);
+      if (cols[4]) PRODUCT_DATA.p1.price4 = parseInt(cols[4]);
+
+      // 讀取每日庫存欄位
+      headers.forEach((h, i) => {
+        const m = h.match(/^(\d{4})_p16$/);
+        if (m) {
+          const dk = m[1];
+          if (!dailyStock[dk]) dailyStock[dk] = {};
+          dailyStock[dk]['p1-6'] = parseInt(cols[i]) || 0;
+        }
+        const m2 = h.match(/^(\d{4})_p14$/);
+        if (m2) {
+          const dk = m2[1];
+          if (!dailyStock[dk]) dailyStock[dk] = {};
+          dailyStock[dk]['p1-4'] = parseInt(cols[i]) || 0;
+        }
+      });
+    }
+
+    if (key === 'p2') {
+      if (cols[1]) PRODUCT_DATA.p2.name  = cols[1];
+      if (cols[2]) PRODUCT_DATA.p2.sub   = cols[2];
+      if (cols[5]) PRODUCT_DATA.p2.price = parseInt(cols[5]);
+
+      headers.forEach((h, i) => {
+        const m = h.match(/^(\d{4})_p2$/);
+        if (m) {
+          const dk = m[1];
+          if (!dailyStock[dk]) dailyStock[dk] = {};
+          dailyStock[dk]['p2'] = parseInt(cols[i]) || 0;
+        }
+      });
+    }
+  });
+
+  // 更新 PRICES / LABELS
+  PRICES['p1-6'] = PRODUCT_DATA.p1.price6;
+  PRICES['p1-4'] = PRODUCT_DATA.p1.price4;
+  PRICES['p2']   = PRODUCT_DATA.p2.price;
+  LABELS['p1-6'] = PRODUCT_DATA.p1.name + ' 6吋';
+  LABELS['p1-4'] = PRODUCT_DATA.p1.name + ' 4吋';
+  LABELS['p2']   = PRODUCT_DATA.p2.name;
+
+  // 更新商品顯示文字
+  const el = (id) => document.getElementById(id);
+  if (el('prod1-name')) el('prod1-name').textContent = PRODUCT_DATA.p1.name;
+  if (el('prod1-sub'))  el('prod1-sub').textContent  = PRODUCT_DATA.p1.sub;
+  if (el('prod1-price6')) el('prod1-price6').textContent = '$' + PRODUCT_DATA.p1.price6.toLocaleString();
+  if (el('prod1-price4')) el('prod1-price4').textContent = '$' + PRODUCT_DATA.p1.price4.toLocaleString();
+  if (el('prod2-name')) el('prod2-name').textContent = PRODUCT_DATA.p2.name;
+  if (el('prod2-sub'))  el('prod2-sub').textContent  = PRODUCT_DATA.p2.sub;
+  if (el('prod2-price')) el('prod2-price').textContent = '$' + PRODUCT_DATA.p2.price.toLocaleString();
+}
+
+// ── 渲染日期按鈕（含額滿判斷）──
 function renderDates() {
   const grid = document.getElementById('dateGrid');
   grid.innerHTML = '';
   PICKUP_DATES.forEach(d => {
     const btn = document.createElement('button');
     btn.className = 'date-btn';
-    btn.innerHTML = `<div>${d.label}</div><div class="date-day">${d.time}</div>`;
-    btn.onclick = () => selectDate(d.label + ' ' + d.time, btn);
+    btn.dataset.dateKey = d.dateKey;
+
+    // 判斷是否全部售完
+    const stock = dailyStock[d.dateKey];
+    const isFull = stock
+      ? (stock['p1-6'] <= 0 && stock['p1-4'] <= 0 && stock['p2'] <= 0)
+      : false;
+
+    if (isFull) {
+      btn.disabled = true;
+      btn.innerHTML = `<div>${d.label}</div><div class="date-day">${d.time}</div><div class="date-full">已額滿</div>`;
+    } else {
+      btn.innerHTML = `<div>${d.label}</div><div class="date-day">${d.time}</div>`;
+      btn.onclick = () => selectDate(d.label + '　' + d.time, d.dateKey, btn);
+    }
     grid.appendChild(btn);
   });
 }
 
-function selectDate(val, btn) {
+// ── 選擇日期 & 更新品項庫存 ──
+function selectDate(val, dateKey, btn) {
   document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  selectedDate = val;
+  selectedDate    = val;
+  selectedDateKey = dateKey;
   document.getElementById('mainGate').classList.remove('locked');
+
+  // 重置數量
+  ['p1-6','p1-4','p2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = 0;
+  });
+
+  // 套用當日庫存
+  applyDailyStock(dateKey);
+  updateSummary();
+}
+
+function applyDailyStock(dateKey) {
+  const stock = dailyStock[dateKey];
+  ['p1-6','p1-4','p2'].forEach(id => {
+    // 先清除舊的售完標籤
+    const row = document.getElementById('row-' + id);
+    if (row) {
+      row.querySelectorAll('.sold-out-tag').forEach(t => t.remove());
+      row.querySelectorAll('.qty-btn').forEach(b => b.disabled = false);
+    }
+    const ctrl = document.getElementById('ctrl-' + id);
+    if (ctrl) ctrl.style.display = '';
+
+    if (!stock) return; // Sheets 未設定，不限制
+
+    const qty = stock[id] ?? 99;
+    const input = document.getElementById(id);
+    if (!input) return;
+    input.max = qty;
+
+    if (qty <= 0) {
+      input.value = 0;
+      if (ctrl) ctrl.style.display = 'none';
+      if (row) {
+        const tag = document.createElement('span');
+        tag.className = 'sold-out-tag';
+        tag.textContent = '已售完';
+        row.appendChild(tag);
+      }
+    }
+  });
 }
 
 // ── QTY ──
 function changeQty(id, delta) {
-  const el = document.getElementById(id);
+  const el  = document.getElementById(id);
+  const max = parseInt(el.max) || 99;
   let v = parseInt(el.value) + delta;
   if (v < 0) v = 0;
-  if (v > 10) v = 10;
+  if (v > max) v = max;
   el.value = v;
   updateSummary();
 }
 
 // ── BADGE ──
 function toggleBadge(btn) {
+  // 若已選「不需要」，先取消
+  if (noBadgeSelected) {
+    noBadgeSelected = false;
+    document.querySelector('.badge-btn.no-badge').classList.remove('selected');
+    document.querySelector('.badge-btn.no-badge .badge-check').textContent = '';
+  }
+
   btn.classList.toggle('selected');
   const val = btn.dataset.val;
   if (btn.classList.contains('selected')) {
-    selectedBadges.push(val);
+    if (!selectedBadges.includes(val)) selectedBadges.push(val);
     btn.querySelector('.badge-check').textContent = '✓';
   } else {
     selectedBadges = selectedBadges.filter(b => b !== val);
     btn.querySelector('.badge-check').textContent = '';
   }
+  updateSummary();
+}
+
+function toggleNoBadge(btn) {
+  // 取消所有已選插牌
+  selectedBadges = [];
+  document.querySelectorAll('.badge-btn:not(.no-badge)').forEach(b => {
+    b.classList.remove('selected');
+    b.querySelector('.badge-check').textContent = '';
+  });
+
+  btn.classList.toggle('selected');
+  noBadgeSelected = btn.classList.contains('selected');
+  btn.querySelector('.badge-check').textContent = noBadgeSelected ? '✓' : '';
   updateSummary();
 }
 
@@ -1134,7 +1243,10 @@ function updateSummary() {
     }
   });
 
-  if (selectedBadges.length > 0) {
+  // 插牌行
+  if (noBadgeSelected) {
+    rows += `<tr><td colspan="3">🏷 插牌：不需要</td></tr>`;
+  } else if (selectedBadges.length > 0) {
     rows += `<tr><td colspan="3">🏷 插牌：${selectedBadges.join('、')}</td></tr>`;
   }
 
@@ -1145,7 +1257,6 @@ function updateSummary() {
 
   document.getElementById('totalPrice').textContent = '$' + total.toLocaleString();
 
-  // Enable submit if has item + consent
   const consent = document.getElementById('consentBox').checked;
   document.getElementById('submitBtn').disabled = !(hasItem && consent && selectedDate);
 }
@@ -1156,18 +1267,18 @@ function togglePolicy(el) {
   el.nextElementSibling.classList.toggle('open');
 }
 
-// ── CONSENT ──
+// ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
-  loadProductData();
-  renderDates();
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  loadSheetData();
   document.getElementById('consentBox').addEventListener('change', updateSummary);
 });
 
 // ── SUBMIT ──
 function submitOrder() {
-  const name = document.getElementById('buyerName').value.trim();
-  const phone = document.getElementById('buyerPhone').value.trim();
-  const email = document.getElementById('buyerEmail').value.trim();
+  const name     = document.getElementById('buyerName').value.trim();
+  const phone    = document.getElementById('buyerPhone').value.trim();
+  const email    = document.getElementById('buyerEmail').value.trim();
   const nickname = document.getElementById('buyerNickname').value.trim();
 
   if (!name || !phone || !email || !nickname) {
@@ -1179,52 +1290,63 @@ function submitOrder() {
     return;
   }
 
-  // Build order data for Google Sheets / EmailJS
   const orderData = buildOrderData(name, phone, email, nickname);
 
-  // Send to Google Sheets
   sendToGoogleSheets(orderData);
-
-  // Send confirmation email via EmailJS
   sendEmailJS(orderData);
 
-  // Show success
   document.getElementById('formArea').style.display = 'none';
-  const ss = document.getElementById('successScreen');
-  ss.classList.add('show');
+  document.getElementById('successScreen').classList.add('show');
   startCountdown();
 }
 
 function buildOrderData(name, phone, email, nickname) {
-  let items = [];
-  Object.keys(PRICES).forEach(id => {
-    const qty = parseInt(document.getElementById(id)?.value || 0);
-    if (qty > 0) {
-      items.push(`${LABELS[id]} ×${qty} $${qty * PRICES[id]}`);
-    }
-  });
+  // 分開欄位以符合 Sheet 欄位順序
+  const p16qty  = parseInt(document.getElementById('p1-6')?.value || 0);
+  const p14qty  = parseInt(document.getElementById('p1-4')?.value || 0);
+  const p2qty   = parseInt(document.getElementById('p2')?.value   || 0);
+  const forkqty = parseInt(document.getElementById('a-fork')?.value || 0);
+  const candlel = parseInt(document.getElementById('a-candle-l')?.value || 0);
+  const candles = parseInt(document.getElementById('a-candle-s')?.value || 0);
 
-  let totalVal = 0;
-  Object.keys(PRICES).forEach(id => {
-    const qty = parseInt(document.getElementById(id)?.value || 0);
-    totalVal += qty * PRICES[id];
-  });
+  const total = p16qty * PRICES['p1-6'] + p14qty * PRICES['p1-4']
+              + p2qty * PRICES['p2'] + forkqty * 30 + candlel * 20 + candles * 10;
+
+  // 插牌文字
+  let badgeText = '無';
+  if (noBadgeSelected) badgeText = '不需要';
+  else if (selectedBadges.length > 0) badgeText = selectedBadges.join('、');
+
+  // 供訂單明細顯示用
+  const itemLines = [];
+  if (p16qty > 0)  itemLines.push(`${LABELS['p1-6']} ×${p16qty}  $${p16qty * PRICES['p1-6']}`);
+  if (p14qty > 0)  itemLines.push(`${LABELS['p1-4']} ×${p14qty}  $${p14qty * PRICES['p1-4']}`);
+  if (p2qty > 0)   itemLines.push(`${LABELS['p2']}   ×${p2qty}   $${p2qty  * PRICES['p2']}`);
+  if (forkqty > 0) itemLines.push(`刀叉組 ×${forkqty}  $${forkqty * 30}`);
+  if (candlel > 0) itemLines.push(`蠟燭（長）×${candlel}  $${candlel * 20}`);
+  if (candles > 0) itemLines.push(`蠟燭（短）×${candles}  $${candles * 10}`);
 
   return {
-    date: selectedDate,
-    name, phone, email, nickname,
-    items: items.join('\n'),
-    badges: selectedBadges.join('、') || '無',
-    total: '$' + totalVal.toLocaleString(),
     timestamp: new Date().toLocaleString('zh-TW'),
+    date: selectedDate,
+    email, name, phone, nickname,
+    // 個別欄位給 Sheets
+    p1_6:     p16qty  > 0 ? `${p16qty}個` : '',
+    p1_4:     p14qty  > 0 ? `${p14qty}個` : '',
+    p2:       p2qty   > 0 ? `${p2qty}條`  : '',
+    a_fork:   forkqty > 0 ? `${forkqty}份` : '',
+    a_candlel: candlel > 0 ? `${candlel}支` : '',
+    a_candles: candles > 0 ? `${candles}支` : '',
+    badges:   badgeText,
+    total:    '$' + total.toLocaleString(),
+    // 給 EmailJS 顯示
+    order_items: itemLines.join('\n') || '（無）',
   };
 }
 
 // ── GOOGLE SHEETS ──
-// Replace YOUR_GOOGLE_SCRIPT_URL with your deployed Apps Script URL
-const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL';
-
 async function sendToGoogleSheets(data) {
+  if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL') return;
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
@@ -1232,33 +1354,23 @@ async function sendToGoogleSheets(data) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-  } catch(e) {
-    console.warn('Google Sheets:', e);
-  }
+  } catch(e) { console.warn('Google Sheets:', e); }
 }
 
 // ── EMAILJS ──
-// Replace with your actual EmailJS IDs
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-
 async function sendEmailJS(data) {
-  if (typeof emailjs === 'undefined') return;
   try {
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      to_email: data.email,
-      to_name: data.name,
-      pickup_date: data.date,
-      buyer_phone: data.phone,
+      to_email:       data.email,
+      to_name:        data.name,
+      pickup_date:    data.date,
+      buyer_phone:    data.phone,
       buyer_nickname: data.nickname,
-      order_items: data.items,
-      order_badges: data.badges,
-      order_total: data.total,
-    }, EMAILJS_PUBLIC_KEY);
-  } catch(e) {
-    console.warn('EmailJS:', e);
-  }
+      order_items:    data.order_items,
+      order_badges:   data.badges,
+      order_total:    data.total,
+    });
+  } catch(e) { console.warn('EmailJS:', e); }
 }
 
 // ── COUNTDOWN ──
@@ -1278,10 +1390,5 @@ function startCountdown() {
   }, 1000);
 }
 </script>
-
-<!-- EmailJS SDK (uncomment & add your public key when ready) -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('YOUR_PUBLIC_KEY');</script> -->
-
 </body>
 </html>
