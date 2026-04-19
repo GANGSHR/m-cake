@@ -1098,7 +1098,7 @@ function renderProducts() {
       ${imgHtml}
       <div class="product-body">
         <div class="product-name">${prod.name}</div>
-        ${prod.sub ? `<div class="product-sub">${prod.sub}</div>` : ''}
+        ${prod.sub ? `<div class="product-sub">${prod.sub.replace(/\n/g, '<br>')}</div>` : ''}
         ${sizesHtml}
       </div>`;
 
