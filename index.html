@@ -192,40 +192,69 @@
     .date-grid { grid-template-columns: 1fr; }
   }
 
+  /* ── 強化後的日期按鈕 ── */
   .date-btn {
     border: 2px solid var(--pale-dogwood-deep);
-    border-radius: 14px;
-    padding: 18px 10px;
+    border-radius: 16px;
+    padding: 20px 12px;
     background: var(--white);
     cursor: pointer;
     text-align: center;
-    transition: all 0.2s;
+    transition: all 0.25s ease;
     color: var(--text-dark);
     font-family: 'Noto Serif TC', serif;
     line-height: 1.6;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(158,123,106,0.06);
   }
   .date-btn:hover:not(:disabled) {
     border-color: var(--brown);
     background: var(--pale-dogwood-light);
-    box-shadow: 0 2px 10px rgba(158,123,106,0.15);
+    box-shadow: 0 4px 18px rgba(158,123,106,0.22);
+    transform: translateY(-2px);
   }
+  /* 選中狀態：明顯的棕色背景 + 左側色條 + 勾勾 */
   .date-btn.selected {
-    border-color: var(--brown);
-    background: var(--pale-dogwood);
+    border-color: var(--brown-deep);
+    border-width: 2.5px;
+    background: linear-gradient(135deg, #EDD8CF 0%, #F5E6E0 100%);
     color: var(--brown-deep);
-    box-shadow: 0 3px 14px rgba(158,123,106,0.22);
+    box-shadow: 0 6px 22px rgba(122,92,78,0.28);
+    transform: translateY(-2px);
+  }
+  .date-btn.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    background: var(--brown-deep);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 20px;
+    text-align: center;
   }
   .date-btn:disabled {
     opacity: 0.55;
     cursor: not-allowed;
     background: #f5f5f5;
+    transform: none;
   }
   .date-btn .date-main {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: 700;
     letter-spacing: 0.04em;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    color: var(--text-dark);
+  }
+  .date-btn.selected .date-main {
+    color: var(--brown-deep);
   }
   .date-btn .date-time {
     font-size: 13px;
@@ -239,6 +268,16 @@
     font-weight: 600;
     margin-top: 4px;
     display: block;
+  }
+  /* 選中時底部提示條 */
+  .date-btn.selected::after {
+    content: '已選擇';
+    display: block;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--brown);
+    letter-spacing: 0.08em;
+    font-weight: 600;
   }
 
   /* ── PICKUP INFO ── */
@@ -512,6 +551,21 @@
   .badge-check { font-size: 11px; }
 
   /* ── ORDER SUMMARY ── */
+  .summary-date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #EDD8CF 0%, #F5E6E0 100%);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    border: 1.5px solid var(--brown-light);
+  }
+  .summary-date-icon { font-size: 18px; flex-shrink: 0; }
+  .summary-date-label { font-size: 13px; color: var(--brown); font-weight: 500; margin-right: 4px; }
+  .summary-date-value { font-size: 15px; font-weight: 700; color: var(--brown-deep); letter-spacing: 0.04em; }
+  .summary-date-empty { font-size: 14px; color: var(--text-light); font-style: italic; }
+
   .summary-table { width: 100%; border-collapse: collapse; }
   .summary-table tr { border-bottom: 1px dashed var(--pale-dogwood-deep); }
   .summary-table tr:last-child { border-bottom: none; }
@@ -540,6 +594,144 @@
     padding: 20px 0;
     letter-spacing: 0.04em;
   }
+
+  /* ── REVIEW BUTTON ── */
+  .review-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: var(--pale-dogwood);
+    border: 2px solid var(--brown-light);
+    border-radius: 12px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    color: var(--brown-deep);
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .review-btn:hover:not(:disabled) {
+    background: var(--pale-dogwood-deep);
+    border-color: var(--brown);
+    box-shadow: 0 3px 12px rgba(158,123,106,0.2);
+  }
+  .review-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── REVIEW MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(74,55,40,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border-radius: 22px;
+    padding: 36px 32px 28px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 16px 60px rgba(74,55,40,0.25);
+    animation: modalSlideUp 0.3s ease;
+  }
+  @keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--brown-deep);
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-section {
+    background: var(--pale-dogwood-light);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    font-size: 14.5px;
+    color: var(--text-mid);
+    line-height: 1.9;
+  }
+  .modal-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brown-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .modal-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--pale-dogwood-deep);
+    font-size: 14px;
+    color: var(--text-dark);
+  }
+  .modal-item-row:last-child { border-bottom: none; }
+  .modal-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--brown-deep);
+    padding: 14px 0 4px;
+    border-top: 1.5px solid var(--pale-dogwood-deep);
+    margin-top: 4px;
+  }
+  .modal-btns {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .modal-cancel-btn {
+    flex: 1;
+    padding: 14px;
+    background: var(--white);
+    border: 1.5px solid var(--pale-dogwood-deep);
+    border-radius: 12px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    color: var(--text-mid);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+  }
+  .modal-cancel-btn:hover { background: var(--pale-dogwood-light); border-color: var(--brown-light); }
+  .modal-confirm-btn {
+    flex: 2;
+    padding: 14px;
+    background: var(--brown);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  .modal-confirm-btn:hover:not(:disabled) { background: var(--brown-deep); }
+  .modal-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   /* ── FORM INPUTS ── */
   .field-group { margin-bottom: 20px; }
@@ -714,6 +906,56 @@
     color: var(--text-light);
     letter-spacing: 0.06em;
     border-top: 1px solid var(--pale-dogwood-deep);
+  }
+
+  /* ── VALIDATION HINT ── */
+  .validation-hint {
+    margin-bottom: 16px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1.5px solid #E8A87C;
+    background: #FFF8F0;
+  }
+  .validation-hint-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: #FFEEE0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #B5541A;
+    letter-spacing: 0.04em;
+  }
+  .validation-hint-list {
+    padding: 10px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .validation-hint-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: #9C4A1A;
+    line-height: 1.5;
+  }
+  .validation-hint-item::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #E8A87C;
+    flex-shrink: 0;
+  }
+  /* 欄位錯誤紅框 */
+  .field-input.field-error {
+    border-color: #E0704A;
+    background: #FFF8F5;
+  }
+  .field-input.field-error:focus {
+    border-color: #C0502A;
   }
 
   /* ── LOADING INDICATOR ── */
@@ -894,6 +1136,16 @@
     <!-- SECTION 5: ORDER SUMMARY -->
     <div class="section-card">
       <div class="section-label"><span class="dot"></span>訂單明細</div>
+
+      <!-- 自取日期顯示 -->
+      <div class="summary-date-row" id="summaryDateRow">
+        <span class="summary-date-icon">📅</span>
+        <span class="summary-date-label">自取日期</span>
+        <span class="summary-date-value" id="summaryDateValue">
+          <span class="summary-date-empty">尚未選擇日期</span>
+        </span>
+      </div>
+
       <div id="summaryContent">
         <div class="summary-empty">尚未選擇任何商品</div>
       </div>
@@ -901,6 +1153,7 @@
         <span>合計</span>
         <span id="totalPrice">$0</span>
       </div>
+
     </div>
 
     <!-- SECTION 6: BUYER INFO -->
@@ -952,7 +1205,11 @@
       </label>
     </div>
 
-    <button class="submit-btn" id="submitBtn" onclick="submitOrder()" disabled>
+    <div id="validationHint" style="display:none;" class="validation-hint">
+      <div class="validation-hint-header">⚠ 以下項目尚未完成，請確認後再送出</div>
+      <div class="validation-hint-list" id="validationHintList"></div>
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="openReviewModal()">
       確認送出訂單 →
     </button>
 
@@ -981,6 +1238,38 @@
   </div>
 </div>
 
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal" onclick="closeReviewModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">🔍 送出前，請確認您的訂購內容</div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">自取日期</div>
+      <div id="modalDate" style="font-size:15px;font-weight:700;color:var(--brown-deep);">—</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">訂購品項</div>
+      <div id="modalItems">—</div>
+    </div>
+
+    <div class="modal-section" id="modalBadgeSection">
+      <div class="modal-section-title">插牌</div>
+      <div id="modalBadge">—</div>
+    </div>
+
+    <div class="modal-total-row">
+      <span>訂單合計</span>
+      <span id="modalTotal">$0</span>
+    </div>
+
+    <div class="modal-btns">
+      <button class="modal-cancel-btn" onclick="closeReviewModal()">← 返回修改</button>
+      <button class="modal-confirm-btn" id="modalSubmitBtn" onclick="submitOrder()">確認無誤，送出訂單 →</button>
+    </div>
+  </div>
+</div>
+
 <footer class="site-footer">
   苷舍　｜　Copyright © 2026 GANSHE. All rights reserved.
 </footer>
@@ -1004,9 +1293,9 @@ const ADDON_PRICES = {
 };
 
 // ── 狀態變數 ──
-let sheetProducts   = [];   // 從 Sheet 讀到的商品陣列
-let sheetDates      = [];   // 從 Sheet 讀到的日期陣列
-let dailyStock      = {};   // { '0508': { 'p1_6吋': 5, 'p2_蛋糕捲': 8 }, ... }
+let sheetProducts   = [];
+let sheetDates      = [];
+let dailyStock      = {};
 let selectedDate    = '';
 let selectedDateKey = '';
 let selectedBadges  = [];
@@ -1026,7 +1315,6 @@ async function loadSheetData() {
     sheetDates    = json.dates    || [];
     dailyStock    = json.stock    || {};
 
-    // 找 addon 圖片（key='addon' 或 key='加購'）
     const addonProd = sheetProducts.find(p => p.key === 'addon' || p.key === '加購');
     if (addonProd && addonProd.img) {
       const imgEl = document.getElementById('addon-img');
@@ -1039,13 +1327,11 @@ async function loadSheetData() {
 
   } catch(e) {
     console.warn('Sheet 資料讀取失敗', e);
-    // 日期區塊顯示錯誤
     document.getElementById('dateGrid').innerHTML =
       '<div class="load-error">無法載入資料，請重新整理頁面。</div>';
     return;
   }
 
-  // 渲染商品（先渲染但鎖定，等選日期後再套庫存）
   renderProducts();
   renderDates();
 }
@@ -1057,7 +1343,6 @@ function renderProducts() {
   const container = document.getElementById('productsContainer');
   container.innerHTML = '';
 
-  // 過濾掉 addon 商品
   const mainProds = sheetProducts.filter(p => p.key !== 'addon' && p.key !== '加購');
 
   if (mainProds.length === 0) {
@@ -1069,7 +1354,6 @@ function renderProducts() {
     const card = document.createElement('div');
     card.className = 'product-card';
 
-    // 圖片區塊
     let imgHtml = '';
     if (prod.img) {
       imgHtml = `
@@ -1080,10 +1364,9 @@ function renderProducts() {
         </div>`;
     }
 
-    // 每個尺寸的行
     let sizesHtml = '';
     prod.sizes.forEach(size => {
-      const slotKey = `${prod.key}_${size}`;   // e.g. 'p1_6吋'
+      const slotKey = `${prod.key}_${size}`;
       const price   = prod.prices[size] || 0;
       const inputId = `qty_${slotKey}`;
 
@@ -1128,7 +1411,6 @@ function renderDates() {
     return;
   }
 
-  // 調整 grid 欄數（最多 3 欄）
   const cols = Math.min(sheetDates.length, 3);
   grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
@@ -1137,7 +1419,6 @@ function renderDates() {
     btn.className = 'date-btn';
     btn.dataset.dateKey = d.dateKey;
 
-    // 判斷當日是否全部售完
     const dayStock = dailyStock[d.dateKey] || {};
     const isFull   = Object.keys(dayStock).length > 0
       && Object.values(dayStock).every(v => v <= 0);
@@ -1167,14 +1448,20 @@ function selectDate(dateObj, btn) {
   selectedDate    = dateObj.label + '　' + dateObj.time;
   selectedDateKey = dateObj.dateKey;
 
-  // 重置所有商品數量
   document.querySelectorAll('.qty-num').forEach(el => { el.value = 0; });
 
-  // 套用庫存限制
   applyDailyStock(dateObj.dateKey);
 
-  // 解鎖表單
   document.getElementById('mainGate').classList.remove('locked');
+
+  // 更新訂單明細中的日期顯示
+  const summaryDateValue = document.getElementById('summaryDateValue');
+  if (summaryDateValue) {
+    summaryDateValue.textContent = selectedDate;
+    summaryDateValue.style.color = 'var(--brown-deep)';
+    summaryDateValue.style.fontWeight = '700';
+  }
+
   updateSummary();
 }
 
@@ -1185,17 +1472,16 @@ function applyDailyStock(dateKey) {
   const dayStock = dailyStock[dateKey] || {};
 
   document.querySelectorAll('.qty-num[data-slot]').forEach(input => {
-    const slotKey = input.dataset.slot;   // e.g. 'p1_6吋'
+    const slotKey = input.dataset.slot;
     const right   = document.getElementById('right_' + slotKey);
     if (!right) return;
 
-    // 清除上次售完標籤
     right.querySelectorAll('.sold-out-tag').forEach(t => t.remove());
     const ctrl = right.querySelector('.qty-control');
 
     const remain = dayStock.hasOwnProperty(slotKey)
       ? Number(dayStock[slotKey])
-      : 99;   // 若 Sheet 未設定該欄位，視為無限
+      : 99;
 
     if (remain <= 0) {
       if (ctrl) ctrl.style.display = 'none';
@@ -1213,7 +1499,6 @@ function applyDailyStock(dateKey) {
   });
 }
 
-// ── 加號按鈕 disable 狀態 ──
 function updatePlusBtn(input) {
   const max  = parseInt(input.max) || 99;
   const val  = parseInt(input.value) || 0;
@@ -1277,7 +1562,6 @@ function toggleNoBadge(btn) {
 function updateSummary() {
   let rows = '', total = 0, hasItem = false;
 
-  // 商品
   document.querySelectorAll('.qty-num[data-slot]').forEach(input => {
     const qty = parseInt(input.value) || 0;
     if (qty <= 0) return;
@@ -1285,15 +1569,13 @@ function updateSummary() {
     const price = parseInt(input.dataset.price) || 0;
     const sub   = qty * price;
     total += sub;
-    // 找商品名 + 尺寸
-    const slotKey  = input.dataset.slot;   // e.g. 'p1_6吋'
+    const slotKey  = input.dataset.slot;
     const [prodKey, size] = slotKey.split('_');
     const prod = sheetProducts.find(p => p.key === prodKey);
     const label = prod ? `${prod.name} ${size}` : slotKey;
     rows += `<tr><td>${label}</td><td>×${qty}</td><td>$${sub.toLocaleString()}</td></tr>`;
   });
 
-  // 加購
   Object.entries(ADDON_PRICES).forEach(([id, info]) => {
     const qty = parseInt(document.getElementById(id)?.value || 0);
     if (qty <= 0) return;
@@ -1303,7 +1585,6 @@ function updateSummary() {
     rows += `<tr><td>${info.label}</td><td>×${qty}</td><td>$${sub.toLocaleString()}</td></tr>`;
   });
 
-  // 插牌
   if (noBadgeSelected) {
     rows += `<tr><td colspan="3">🏷 插牌：不需要</td></tr>`;
   } else if (selectedBadges.length > 0) {
@@ -1316,8 +1597,119 @@ function updateSummary() {
 
   document.getElementById('totalPrice').textContent = '$' + total.toLocaleString();
 
-  const consent = document.getElementById('consentBox').checked;
-  document.getElementById('submitBtn').disabled = !(hasItem && consent && selectedDate);
+  // 控制確認按鈕狀態 & 顯示驗證提示
+  const consent     = document.getElementById('consentBox').checked;
+  const badgeOk     = noBadgeSelected || selectedBadges.length > 0;
+  const nameVal     = document.getElementById('buyerName').value.trim();
+  const phoneVal    = document.getElementById('buyerPhone').value.trim();
+  const emailVal    = document.getElementById('buyerEmail').value.trim();
+  const nicknameVal = document.getElementById('buyerNickname').value.trim();
+
+  // 收集缺漏清單
+  const missing = [];
+  if (!selectedDate)  missing.push('尚未選擇自取日期');
+  if (!hasItem)       missing.push('尚未選擇任何商品');
+  if (!badgeOk)       missing.push('加購項目：請選擇插牌（或選「不需要插牌」）');
+  if (!nameVal)       missing.push('訂購人資訊：中文姓名');
+  if (!phoneVal)      missing.push('訂購人資訊：聯絡電話');
+  if (!emailVal)      missing.push('訂購人資訊：Email');
+  if (!nicknameVal)   missing.push('訂購人資訊：FB / LINE 暱稱');
+  if (!consent)       missing.push('請勾選同意退貨退款政策');
+
+  // 欄位紅框
+  const fields = {
+    buyerName:     !nameVal,
+    buyerPhone:    !phoneVal,
+    buyerEmail:    !emailVal,
+    buyerNickname: !nicknameVal,
+  };
+  Object.entries(fields).forEach(([id, hasErr]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (hasErr) el.classList.add('field-error');
+    else        el.classList.remove('field-error');
+  });
+
+  // 顯示或隱藏提示區塊
+  const hintBox  = document.getElementById('validationHint');
+  const hintList = document.getElementById('validationHintList');
+  if (missing.length > 0) {
+    hintList.innerHTML = missing.map(m =>
+      `<div class="validation-hint-item">${m}</div>`
+    ).join('');
+    hintBox.style.display = '';
+  } else {
+    hintBox.style.display = 'none';
+    hintList.innerHTML = '';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 確認訂購內容 Modal
+// ══════════════════════════════════════════════════════
+function openReviewModal() {
+  // 先跑一次驗證同步狀態
+  updateSummary();
+
+  // 檢查是否有缺漏
+  const hintBox = document.getElementById('validationHint');
+  if (hintBox && hintBox.style.display !== 'none') {
+    hintBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // 短暫閃爍提示
+    hintBox.style.transition = 'box-shadow 0.2s';
+    hintBox.style.boxShadow = '0 0 0 3px rgba(224,112,74,0.5)';
+    setTimeout(() => { hintBox.style.boxShadow = ''; }, 600);
+    return;
+  }
+
+  // 填入日期
+  document.getElementById('modalDate').textContent = selectedDate || '尚未選擇';
+
+  // 填入品項
+  let itemsHtml = '';
+  let total = 0;
+
+  document.querySelectorAll('.qty-num[data-slot]').forEach(input => {
+    const qty = parseInt(input.value) || 0;
+    if (qty <= 0) return;
+    const price  = parseInt(input.dataset.price) || 0;
+    const sub    = qty * price;
+    total += sub;
+    const slotKey = input.dataset.slot;
+    const [prodKey, size] = slotKey.split('_');
+    const prod = sheetProducts.find(p => p.key === prodKey);
+    const label = prod ? `${prod.name} ${size}` : slotKey;
+    itemsHtml += `<div class="modal-item-row"><span>${label} ×${qty}</span><span>$${sub.toLocaleString()}</span></div>`;
+  });
+
+  Object.entries(ADDON_PRICES).forEach(([id, info]) => {
+    const qty = parseInt(document.getElementById(id)?.value || 0);
+    if (qty <= 0) return;
+    const sub = qty * info.price;
+    total += sub;
+    itemsHtml += `<div class="modal-item-row"><span>${info.label} ×${qty}</span><span>$${sub.toLocaleString()}</span></div>`;
+  });
+
+  document.getElementById('modalItems').innerHTML = itemsHtml || '<span style="color:var(--text-light)">尚未選擇商品</span>';
+
+  // 插牌
+  let badgeText = '尚未選擇';
+  if (noBadgeSelected)               badgeText = '不需要';
+  else if (selectedBadges.length > 0) badgeText = selectedBadges.join('、');
+  document.getElementById('modalBadge').textContent = badgeText;
+
+  // 合計
+  document.getElementById('modalTotal').textContent = '$' + total.toLocaleString();
+
+  document.getElementById('reviewModal').classList.add('show');
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.remove('show');
+}
+
+function closeReviewModalOutside(e) {
+  if (e.target === document.getElementById('reviewModal')) closeReviewModal();
 }
 
 // ── 政策折疊 ──
@@ -1333,6 +1725,20 @@ document.addEventListener('DOMContentLoaded', () => {
   emailjs.init(EMAILJS_PUBLIC_KEY);
   loadSheetData();
   document.getElementById('consentBox').addEventListener('change', updateSummary);
+  // 訂購人資訊欄位即時驗證（blur 才標紅，input 即時更新提示）
+  ['buyerName','buyerPhone','buyerEmail','buyerNickname'].forEach(function(id){
+    const el = document.getElementById(id);
+    el.addEventListener('input', updateSummary);
+    // 離開欄位後才顯示紅框
+    el.addEventListener('blur', function() {
+      if (!el.value.trim()) el.classList.add('field-error');
+      else                  el.classList.remove('field-error');
+    });
+    // 開始輸入就先移除紅框
+    el.addEventListener('focus', function() {
+      el.classList.remove('field-error');
+    });
+  });
 });
 
 // ══════════════════════════════════════════════════════
@@ -1344,29 +1750,38 @@ async function submitOrder() {
   const email    = document.getElementById('buyerEmail').value.trim();
   const nickname = document.getElementById('buyerNickname').value.trim();
 
+  if (!noBadgeSelected && selectedBadges.length === 0) {
+    closeReviewModal();
+    alert('請選擇插牌（或選「不需要插牌」）');
+    return;
+  }
   if (!name || !phone || !email || !nickname) {
+    closeReviewModal();
     alert('請完整填寫訂購人資訊');
     return;
   }
   if (!email.includes('@')) {
+    closeReviewModal();
     alert('請填寫正確的 Email 格式');
     return;
   }
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = '送出中，請稍候⋯';
+  const modalBtn = document.getElementById('modalSubmitBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  if (modalBtn) { modalBtn.disabled = true; modalBtn.textContent = '送出中，請稍候⋯'; }
+  if (submitBtn) submitBtn.disabled = true;
 
   const orderData = buildOrderData(name, phone, email, nickname);
   const ok = await sendToGoogleSheets(orderData);
 
   if (!ok) {
-    btn.disabled = false;
-    btn.textContent = '確認送出訂單 →';
+    if (modalBtn) { modalBtn.disabled = false; modalBtn.textContent = '確認無誤，送出訂單 →'; }
+    if (submitBtn) submitBtn.disabled = false;
     return;
   }
 
   sendEmailJS(orderData);
+  closeReviewModal();
 
   document.getElementById('formArea').style.display = 'none';
   document.getElementById('successScreen').classList.add('show');
@@ -1376,10 +1791,9 @@ async function submitOrder() {
 // ── 組建訂單資料 ──
 function buildOrderData(name, phone, email, nickname) {
   let total = 0;
-  const quantities = {};   // { 'p1_6吋': 2, ... }（傳給 GAS 扣庫存用）
-  const orderItems = [];   // [{ label, qty, price }]（明細用）
+  const quantities = {};
+  const orderItems = [];
 
-  // 商品
   document.querySelectorAll('.qty-num[data-slot]').forEach(input => {
     const qty = parseInt(input.value) || 0;
     if (qty <= 0) return;
@@ -1394,7 +1808,6 @@ function buildOrderData(name, phone, email, nickname) {
     total += qty * price;
   });
 
-  // 加購
   const addonItems = [];
   Object.entries(ADDON_PRICES).forEach(([id, info]) => {
     const qty = parseInt(document.getElementById(id)?.value || 0);
