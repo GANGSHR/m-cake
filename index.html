@@ -1527,19 +1527,26 @@ function changeQty(id, delta) {
 // 插牌選擇
 // ══════════════════════════════════════════════════════
 function toggleBadge(btn) {
-  if (noBadgeSelected) {
-    noBadgeSelected = false;
-    const nob = document.querySelector('.badge-btn.no-badge');
-    if (nob) { nob.classList.remove('selected'); nob.querySelector('.badge-check').textContent = ''; }
-  }
-  btn.classList.toggle('selected');
-  const val = btn.dataset.val;
-  if (btn.classList.contains('selected')) {
-    if (!selectedBadges.includes(val)) selectedBadges.push(val);
+  // 清除「不需要插牌」
+  noBadgeSelected = false;
+  const nob = document.querySelector('.badge-btn.no-badge');
+  if (nob) { nob.classList.remove('selected'); nob.querySelector('.badge-check').textContent = ''; }
+
+  // 若點的是已選中的，則取消選取（允許反選）
+  const isAlreadySelected = btn.classList.contains('selected');
+
+  // 清除所有插牌選項
+  document.querySelectorAll('.badge-btn:not(.no-badge)').forEach(b => {
+    b.classList.remove('selected');
+    b.querySelector('.badge-check').textContent = '';
+  });
+  selectedBadges = [];
+
+  // 若原本沒選，則選取此項
+  if (!isAlreadySelected) {
+    btn.classList.add('selected');
     btn.querySelector('.badge-check').textContent = '✓';
-  } else {
-    selectedBadges = selectedBadges.filter(b => b !== val);
-    btn.querySelector('.badge-check').textContent = '';
+    selectedBadges = [btn.dataset.val];
   }
   updateSummary();
 }
