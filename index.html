@@ -958,6 +958,223 @@
     border-color: #C0502A;
   }
 
+  /* ── SUCCESS SCREEN EXTRAS ── */
+  .success-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 24px;
+    flex-wrap: wrap;
+    max-width: 480px;
+  }
+  .success-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 90px;
+    max-width: 130px;
+  }
+  .success-step-num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--brown);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .success-step-text {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    text-align: center;
+  }
+  .success-step-arrow {
+    font-size: 18px;
+    color: var(--brown-light);
+    margin-top: -20px;
+    flex-shrink: 0;
+  }
+  @media(max-width:420px){
+    .success-step-arrow { display: none; }
+    .success-steps { gap: 16px; }
+  }
+
+  .success-order-card,
+  .success-payment-card,
+  .success-msg-guide {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin: 0 auto 18px;
+    max-width: 480px;
+    text-align: left;
+    border: 1px solid rgba(196,160,144,0.25);
+    box-shadow: 0 2px 16px rgba(158,123,106,0.08);
+  }
+  .success-payment-card {
+    border: 2px solid var(--brown-light);
+    background: linear-gradient(135deg, #FDF6F2 0%, #FAF0EB 100%);
+  }
+  .success-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brown-deep);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--pale-dogwood-deep);
+  }
+  .success-order-date {
+    font-size: 14px;
+    color: var(--brown);
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+  }
+  .success-order-items {
+    margin-bottom: 14px;
+  }
+  .success-order-item-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--text-mid);
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--pale-dogwood-light);
+  }
+  .success-order-item-row:last-child { border-bottom: none; }
+  .success-order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1.5px solid var(--pale-dogwood-deep);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--brown-deep);
+  }
+  .success-total-amount {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .success-payment-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--pale-dogwood-deep);
+  }
+  .success-payment-row:last-of-type { border-bottom: none; }
+  .success-payment-label {
+    font-size: 13px;
+    color: var(--text-light);
+    min-width: 36px;
+    flex-shrink: 0;
+    letter-spacing: 0.06em;
+  }
+  .success-payment-value {
+    font-size: 15px;
+    color: var(--text-dark);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .success-account {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--brown-deep);
+    letter-spacing: 0.12em;
+  }
+  .success-payment-deadline {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #FFF0E8 0%, #FFE4D6 100%);
+    border-radius: 12px;
+    font-size: 14px;
+    color: #8B3A1A;
+    line-height: 1.9;
+    border: 2px solid #E07040;
+    box-shadow: 0 2px 10px rgba(200, 80, 30, 0.15);
+  }
+
+  .success-msg-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--pale-dogwood-light);
+  }
+  .success-msg-step:last-child { border-bottom: none; padding-bottom: 0; }
+  .success-msg-badge {
+    background: var(--brown);
+    color: white;
+    border-radius: 100px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .success-msg-content {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+  .success-msg-hint {
+    font-size: 13px;
+    color: var(--text-light);
+    display: block;
+    margin-top: 4px;
+  }
+  .success-msg-highlight {
+    display: inline-block;
+    background: linear-gradient(135deg, #EDD8CF 0%, #F5E6E0 100%);
+    color: var(--brown-deep);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    border: 1.5px solid var(--brown-light);
+    letter-spacing: 0.04em;
+    margin: 4px 0;
+  }
+
+  .copy-btn {
+    background: var(--brown);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .copy-btn:hover { background: var(--brown-deep); }
+  .copy-btn.copied { background: #4CAF50; }
+
+  .success-msg-notice {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: #FFF3EC;
+    border-radius: 10px;
+    font-size: 13.5px;
+    color: var(--warn);
+    line-height: 1.7;
+    border: 1px solid #F0C8B0;
+  }
+
   /* ── LOADING INDICATOR ── */
   .loading-dates {
     text-align: center;
@@ -982,8 +1199,8 @@
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-en">gangshr × Cake Pre-order</div>
-  <h1 class="header-title" id="pageTitle">苷舍・6月鮮奶油蛋糕預購</h1>
-  <p class="header-sub">for JUNE.</p>
+  <h1 class="header-title" id="pageTitle">苷舍・六月鮮奶油蛋糕預購</h1>
+  <p class="header-sub">For JUNE.</p>
 </header>
 
 <!-- FORM AREA -->
@@ -998,11 +1215,11 @@
       </div>
       <div class="step-item">
         <div class="step-num">2</div>
-        <div class="step-text">60分鐘內<br>私訊認領</div>
+        <div class="step-text">24小時內<br>完成匯款</div>
       </div>
       <div class="step-item">
         <div class="step-num">3</div>
-        <div class="step-text">24小時內<br>完成匯款</div>
+        <div class="step-text">私訊告知<br>大名末五碼</div>
       </div>
       <div class="step-item">
         <div class="step-num">4</div>
@@ -1028,11 +1245,11 @@
         <span class="pickup-icon">🕐</span>
         <div id="timeInfoBox">
           <div>週五　17:30 – 18:00</div>
-          <div>週六　13:30 – 14:00</div>
+          <div>週六　14:00 – 14:30</div>
           <div>週日　12:30 – 13:00</div>
         </div>
       </div>
-      <div class="pickup-warn">⚠ 不提早開放，也不延後關閉，請準時前往</div>
+      <div class="pickup-warn">⚠ 工作室僅在固定時間開放，不提早開放，也不延後關閉，請準時前往</div>
     </div>
   </div>
 
@@ -1041,7 +1258,7 @@
     <div class="section-label"><span class="dot"></span>訂購注意事項</div>
     <ul class="notice-list">
       <li style="background:var(--pale-dogwood);border-radius:10px;padding:12px 14px;border-bottom:none;font-size:15px;font-weight:500;color:var(--brown-deep);margin-bottom:6px;"><span>🧊 鮮奶油蛋糕 <strong>僅限自取</strong>，請攜帶保冷袋＋保冷磚前往，取得後 <strong>20分鐘內</strong> 放入冷藏。</span></li>
-      <li><span>填單後 <strong>60分鐘內</strong> 請來 FB 私訊或官方 LINE 告知「訂購人中文全名」，逾時即自動取消。</span></li>
+      <li><span>填單後請於 <strong>24小時內</strong> 完成匯款，逾時視同放棄，以棄單論。</span></li>
       <li><span>每日製作量有限，額滿即提早關單。</span></li>
       <li><span>鮮奶油蛋糕<strong>無客製</strong>，不提供寫字、切片、更改口味/造型。</span></li>
       <li><span>賞味期：冷藏保存 <strong>2天</strong>（自取當日算第1天）。</span></li>
@@ -1172,6 +1389,7 @@
         <label class="field-label">FB / LINE 暱稱<span class="req">*</span></label>
         <input class="field-input" type="text" id="buyerNickname" placeholder="方便我們辨識您的私訊帳號">
       </div>
+
     </div>
 
     <!-- SECTION 7: REFUND POLICY -->
@@ -1198,7 +1416,7 @@
       <input class="consent-check" type="checkbox" id="consentBox">
       <label class="consent-text" for="consentBox">
         我已閱讀並同意上述退貨退款政策，且確認所有訂購資訊正確無誤。<br>
-        送出表單後，我會立刻在60分鐘內私訊告知訂購人中文姓名。
+        我了解需於 <strong>24小時內完成匯款</strong>，並私訊告知訂購人姓名與匯款末五碼，訂單方算成立。
       </label>
     </div>
 
@@ -1219,18 +1437,96 @@
   <h2 class="success-title">訂單已送出！</h2>
   <p class="success-sub">
     感謝您的預購，訂單確認信已寄送至您的信箱。<br>
-    請務必於60分鐘內完成私訊認領，逾時訂單將自動取消。
+    請依照以下步驟完成後續流程。
   </p>
-  <div class="success-warn">
-    ⏰ 距離訂單取消剩餘時間：<span id="countdown">60:00</span><br>
-    請立即擇一私訊我們，告知「訂購人中文姓名」
+
+  <!-- 步驟提示 -->
+  <div class="success-steps">
+    <div class="success-step">
+      <div class="success-step-num">1</div>
+      <div class="success-step-text"><strong>24小時內</strong>完成匯款</div>
+    </div>
+    <div class="success-step-arrow">→</div>
+    <div class="success-step">
+      <div class="success-step-num">2</div>
+      <div class="success-step-text">私訊告知<br><strong>大名＋末五碼</strong></div>
+    </div>
+    <div class="success-step-arrow">→</div>
+    <div class="success-step">
+      <div class="success-step-num">3</div>
+      <div class="success-step-text">我方核對<br>訂單成立</div>
+    </div>
   </div>
+
+  <!-- 匯款時效警示 -->
+  <div class="success-warn" style="background:linear-gradient(135deg,#FFE8DC,#FFD6C4);border:2px solid #E06030;color:#8B2800;font-size:15px;padding:18px 22px;box-shadow:0 3px 12px rgba(200,60,0,0.18);">
+    ⏰ 請於 <strong>24小時內</strong> 完成匯款，超過時效視同放棄，訂單將列為無效並以棄單論。
+  </div>
+
+  <!-- 訂單摘要 -->
+  <div class="success-order-card">
+    <div class="success-card-title">📋 您的訂購明細</div>
+    <div class="success-order-date" id="successOrderDate"></div>
+    <div id="successOrderItems" class="success-order-items"></div>
+    <div class="success-order-total">
+      <span>訂單合計</span>
+      <span id="successOrderTotal" class="success-total-amount"></span>
+    </div>
+  </div>
+
+  <!-- 匯款資訊 -->
+  <div class="success-payment-card">
+    <div class="success-card-title">🏦 匯款資訊</div>
+    <div class="success-payment-row">
+      <span class="success-payment-label">銀行</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span class="success-payment-value">812（台新銀行）敦南分行</span>
+      </div>
+    </div>
+    <div class="success-payment-row">
+      <span class="success-payment-label">帳號</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span class="success-payment-value success-account" id="accountDisplay">28881007328147</span>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <button class="copy-btn" style="width:100%;padding:10px 14px;font-size:14px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;" onclick="copyAccount()">
+        <span id="copyBtnText">📋 一鍵複製：銀行代碼 812 ＋ 帳號 28881007328147</span>
+      </button>
+    </div>
+    <div class="success-payment-row">
+      <span class="success-payment-label">金額</span>
+      <span class="success-payment-value" id="successPayAmount" style="font-weight:700;color:var(--brown-deep);font-size:18px;"></span>
+    </div>
+    <div class="success-payment-deadline">
+      ⏳ 匯款截止時間：<strong id="payDeadline" style="font-size:17px;color:#C03000;letter-spacing:0.06em;">計算中⋯</strong><br>
+      超過時效視同放棄，訂單將列為無效並以棄單論
+    </div>
+  </div>
+
+  <!-- 私訊認領說明 -->
+  <div class="success-msg-guide">
+    <div class="success-card-title">💬 匯款後私訊回報</div>
+    <div class="success-msg-step">
+      <div class="success-msg-badge">完款後</div>
+      <div class="success-msg-content">
+        完成匯款後，請擇一私訊我們告知：<br>
+        <span class="success-msg-highlight">「訂購人大名 ＋ 匯款末五碼」</span><br>
+        <span class="success-msg-hint">例如：王小明 28147</span>
+      </div>
+    </div>
+    <div class="success-msg-notice">
+      ⚠ 完成匯款後<strong>請主動聯繫我們</strong>，我方對帳確認後，訂單才算預訂成功。<br>
+      超過匯款時效未完成匯款，訂單將列為無效並以棄單論。
+    </div>
+  </div>
+
   <div class="contact-btns">
     <a href="https://m.me/1463033500627955" target="_blank" class="contact-btn fb">
-      💬 FB 私訊認領
+      💬 FB 私訊回報
     </a>
     <a href="https://lin.ee/UoNQoWp" target="_blank" class="contact-btn line">
-      💬 LINE 私訊認領
+      💬 LINE 私訊回報
     </a>
   </div>
 </div>
@@ -1253,6 +1549,11 @@
     <div class="modal-section" id="modalBadgeSection">
       <div class="modal-section-title">插牌</div>
       <div id="modalBadge">—</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">訂購人資訊</div>
+      <div id="modalBuyerInfo">—</div>
     </div>
 
     <div class="modal-total-row">
@@ -1702,6 +2003,16 @@ function openReviewModal() {
   else if (selectedBadges.length > 0) badgeText = selectedBadges.join('、');
   document.getElementById('modalBadge').textContent = badgeText;
 
+  // 訂購人資訊
+  const name     = document.getElementById('buyerName').value.trim();
+  const phone    = document.getElementById('buyerPhone').value.trim();
+  const nickname = document.getElementById('buyerNickname').value.trim();
+  document.getElementById('modalBuyerInfo').innerHTML = `
+    <div class="modal-item-row"><span>姓名</span><span>${name || '—'}</span></div>
+    <div class="modal-item-row"><span>電話</span><span>${phone || '—'}</span></div>
+    <div class="modal-item-row"><span>FB/LINE</span><span>${nickname || '—'}</span></div>
+  `;
+
   // 合計
   document.getElementById('modalTotal').textContent = '$' + total.toLocaleString();
 
@@ -1786,6 +2097,8 @@ async function submitOrder() {
 
   sendEmailJS(orderData);
   closeReviewModal();
+
+  populateSuccessScreen(orderData);
 
   document.getElementById('formArea').style.display = 'none';
   document.getElementById('successScreen').classList.add('show');
@@ -1885,18 +2198,110 @@ async function sendEmailJS(data) {
 }
 
 // ══════════════════════════════════════════════════════
-// 60 分鐘倒數
+// 填入成功頁訂單摘要
+// ══════════════════════════════════════════════════════
+function populateSuccessScreen(data) {
+  // 日期
+  const dateEl = document.getElementById('successOrderDate');
+  if (dateEl) dateEl.textContent = '📅 自取日期：' + data.date;
+
+  // 品項列表
+  const itemsEl = document.getElementById('successOrderItems');
+  if (itemsEl) {
+    let html = '';
+    data.orderItems.forEach(it => {
+      html += `<div class="success-order-item-row">
+        <span>${it.label} ×${it.qty}</span>
+        <span>$${it.sub.toLocaleString()}</span>
+      </div>`;
+    });
+    if (data.badges && data.badges !== '無') {
+      html += `<div class="success-order-item-row">
+        <span>🏷 插牌：${data.badges}</span>
+        <span></span>
+      </div>`;
+    }
+    if (data.remit) {
+      html += `<div class="success-order-item-row" style="color:var(--brown);font-weight:600;">
+        <span>💳 匯款末五碼</span>
+        <span>${data.remit}</span>
+      </div>`;
+    }
+    itemsEl.innerHTML = html || '<div style="color:var(--text-light);font-size:14px;">（無商品）</div>';  }
+
+  // 合計
+  const totalEl = document.getElementById('successOrderTotal');
+  if (totalEl) totalEl.textContent = data.total;
+
+  // 匯款金額
+  const payEl = document.getElementById('successPayAmount');
+  if (payEl) payEl.textContent = data.total;
+}
+
+// ══════════════════════════════════════════════════════
+// 複製帳號
+// ══════════════════════════════════════════════════════
+function copyAccount() {
+  const text = '812 28881007328147';
+  navigator.clipboard.writeText(text).then(() => {
+    const label = document.getElementById('copyBtnText');
+    if (!label) return;
+    const btn = label.closest('.copy-btn');
+    if (btn) btn.classList.add('copied');
+    label.textContent = '✓ 已複製！銀行代碼 812 ＋ 帳號 28881007328147';
+    setTimeout(() => {
+      if (btn) btn.classList.remove('copied');
+      label.textContent = '📋 一鍵複製：銀行代碼 812 ＋ 帳號 28881007328147';
+    }, 2500);
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = '812 28881007328147';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    const label = document.getElementById('copyBtnText');
+    if (label) {
+      label.textContent = '✓ 已複製！銀行代碼 812 ＋ 帳號 28881007328147';
+      setTimeout(() => label.textContent = '📋 一鍵複製：銀行代碼 812 ＋ 帳號 28881007328147', 2500);
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// 顯示匯款截止時間 ＆ 倒數
 // ══════════════════════════════════════════════════════
 function startCountdown() {
-  let secs = 3600;
-  const el = document.getElementById('countdown');
-  const timer = setInterval(() => {
-    secs--;
-    if (secs <= 0) { clearInterval(timer); el.textContent = '已超時'; return; }
-    const m = Math.floor(secs / 60).toString().padStart(2, '0');
-    const s = (secs % 60).toString().padStart(2, '0');
-    el.textContent = `${m}:${s}`;
-  }, 1000);
+  const now = new Date();
+  let deadline;
+
+  // 若下單時間在 00:00 ~ 00:59（凌晨），截止為「下單日+1天」的 23:59
+  // 否則截止為「下單時間 + 24 小時」，但若超過 23:59 則取當天 23:59
+  const hour = now.getHours();
+  const min  = now.getMinutes();
+
+  if (hour === 0) {
+    // 凌晨 00:00 ~ 00:59 下單 → 隔日 23:59
+    deadline = new Date(now);
+    deadline.setDate(deadline.getDate() + 1);
+    deadline.setHours(23, 59, 0, 0);
+  } else {
+    // 其他時間：下單 +24h，若超過當日 23:59 則 cap 為次日 23:59
+    const plus24 = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    // 計算當天（下單日+1）的 23:59
+    const nextDay2359 = new Date(now);
+    nextDay2359.setDate(nextDay2359.getDate() + 1);
+    nextDay2359.setHours(23, 59, 0, 0);
+    // 取較早者（正常情況下 +24h < 次日23:59，除非很晚下單）
+    deadline = plus24 < nextDay2359 ? plus24 : nextDay2359;
+  }
+
+  const pad = n => String(n).padStart(2, '0');
+  const deadlineStr =
+    `${deadline.getFullYear()}/${pad(deadline.getMonth()+1)}/${pad(deadline.getDate())}　` +
+    `${pad(deadline.getHours())}:${pad(deadline.getMinutes())}`;
+  const deadlineEl = document.getElementById('payDeadline');
+  if (deadlineEl) deadlineEl.textContent = deadlineStr;
 }
 </script>
 </body>
