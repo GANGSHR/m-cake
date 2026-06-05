@@ -2103,6 +2103,9 @@ async function submitOrder() {
   document.getElementById('formArea').style.display = 'none';
   document.getElementById('successScreen').classList.add('show');
   startCountdown();
+    // ★ 修正：直接用 orderData 裡已計算好的截止時間，確保與確認信一致
+  const deadlineEl = document.getElementById('payDeadline');
+  if (deadlineEl) deadlineEl.textContent = orderData.pay_deadline;
 }
 
 // ── 組建訂單資料 ──
@@ -2140,6 +2143,25 @@ function buildOrderData(name, phone, email, nickname) {
 
   const itemLines = orderItems.map(it => `${it.label} ×${it.qty}  $${it.sub.toLocaleString()}`);
 
+  // ★ 修正：計算匯款截止時間
+  const _now = new Date();
+  const _pad = n => String(n).padStart(2, '0');
+  let _deadline;
+  if (_now.getHours() === 0) {
+    _deadline = new Date(_now);
+    _deadline.setDate(_deadline.getDate() + 1);
+    _deadline.setHours(23, 59, 0, 0);
+  } else {
+    const _plus24 = new Date(_now.getTime() + 24 * 60 * 60 * 1000);
+    const _next2359 = new Date(_now);
+    _next2359.setDate(_next2359.getDate() + 1);
+    _next2359.setHours(23, 59, 0, 0);
+    _deadline = _plus24 < _next2359 ? _plus24 : _next2359;
+  }
+  const payDeadlineStr =
+    `${_deadline.getFullYear()}/${_pad(_deadline.getMonth()+1)}/${_pad(_deadline.getDate())} ` +
+    `${_pad(_deadline.getHours())}:${_pad(_deadline.getMinutes())}`;
+
   return {
     timestamp:  new Date().toLocaleString('zh-TW'),
     date:       selectedDate,
@@ -2151,7 +2173,7 @@ function buildOrderData(name, phone, email, nickname) {
     addonText:  addonItems.join('、') || '',
     total:      '$' + total.toLocaleString(),
     order_items: itemLines.join('\n') || '（無）',
-  };
+    pay_deadline: payDeadlineStr,  // ★ 修正：新增
 }
 
 // ══════════════════════════════════════════════════════
@@ -2191,6 +2213,7 @@ async function sendEmailJS(data) {
       order_items:    data.order_items,
       order_badges:   data.badges,
       order_total:    data.total,
+      pay_deadline:   data.pay_deadline,  // ★ 修正：新增
     });
   } catch(e) {
     console.warn('EmailJS 寄送失敗（不影響訂單）:', e);
